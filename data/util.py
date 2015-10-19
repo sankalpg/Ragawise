@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import codecs
 import json, os, sys
 import numpy as np
@@ -33,4 +32,20 @@ def generate_raga_list(output_file):
         fid.write(format_string % (raga['common_name'], raga['uuid'], 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         fid.write("\n")
     fid.close()
+
+def generate_svar_transition_empty_file(dir_name):
+    """
+    For annotating svar transitions this function creates a csv file
+    """
+    #fetching a list of ragas
+    ragas = hn.get_raags()
+
+    mtx = np.zeros((len(svaras)+1, len(svaras)+1)).astype(np.int).astype(np.str)
+    mtx[1:, 0] = svaras
+    mtx[0, 1:] = svaras
+    mtx[0, 0] = '-'
+    for ii, raga in enumerate(ragas):
+        fname = os.path.join(dir_name, raga['uuid']+'.csv')
+        np.savetxt(fname, mtx, fmt="%s", delimiter='\t')
+
 
