@@ -31,7 +31,7 @@ function interpolate(leftVal, middleVal, rightVal, currentBin){
 
 function autoCorrelate( buffer, sampleRate, oct_fold ) {
     // This is a very very basic version of pitch tracking, lets use a better version once we have stuff working
-    console.log(sampleRate);
+    //console.log(sampleRate);
     var SIZE = buffer.length;
     var sam_min = Math.round(sampleRate/max_f0);
     var sam_max = Math.round(sampleRate/min_f0);

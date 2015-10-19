@@ -87,7 +87,8 @@ function getSamples( time ) {
 
     // use the time domain data for pitch estimation
     var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
-    console.log(pitch)  //logging the pitch
+    transcribe_note(pitch);
+    //console.log(pitch)  //logging the pitch
 
     //This is the way we have made continuous callback to this function
     if (!window.requestAnimationFrame)
