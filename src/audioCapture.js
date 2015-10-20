@@ -79,8 +79,9 @@ function init() {
     }
     //initializing pitch visualization
     var xRange = {min:0, max:pitch_buffer_len};
-    var yRange = {min:0, max:1200};
+    var yRange = {min:1000, max:2400};
     initDraw(xRange, yRange);
+    initPitchYIN(samplingRate = audio_context.sampleRate);
 };
 
 // Function to read the samples and do some processing
@@ -91,12 +92,19 @@ function getSamples( time ) {
 
     // use the time domain data for pitch estimation
     
-    var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
-    pitch_buffer.push(pitch);
+    //var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
+    var pitch = computePitchYIN(myBuffer);
     
     //console.log(pitch_buffer.get_buff());
+    if (pitch > 0){
+    pitch = 1200*Math.log2(pitch/tonic);    
+    }
+    else{
+        pitch = -1;
+    }
+    pitch_buffer.push(pitch);    
+    transcribe_note(pitch);
     draw(pitch_buffer.get_buff());  //draw the buffer
-    //transcribe_note(pitch);
     //console.log(pitch)  //logging the pitch
 
     //This is the way we have made continuous callback to this function

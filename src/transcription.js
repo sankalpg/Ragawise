@@ -13,7 +13,7 @@ var createRingBuffer = function(length){
 
 
 //Crucial parameters
-var min_note_dur = 0.1;
+var min_note_dur = 0.3;
 var max_gap_allwd = 0.1;
 var note_buff_len = 10; //number of past notes to store
 var last_frame_pitch = -1;

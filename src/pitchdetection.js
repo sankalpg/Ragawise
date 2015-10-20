@@ -3,7 +3,7 @@
 var Thsld_energy_per_frame = 0.01;
 var min_f0 = 80.0;
 var max_f0 = 600.0;
-var tonic = 110;
+var tonic = 55.0;
 var pitch_buffer_len = 500;
 var pitch_buffer  = createRingBuffer(pitch_buffer_len);
 

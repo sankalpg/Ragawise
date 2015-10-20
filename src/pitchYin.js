@@ -37,8 +37,10 @@ function findLocalMinimas(buffer){
 function initPitchYIN(samplingRate, min_f0, max_f0, interpolate, tolerance, octFold){
 
 	//assigning the default values of the parameters
-	samplingRate = samplingRate || 44100;
-	console.log("Since no samplingRate was provided, we assume 44100 Hz");
+	if (typeof samplingRate == 'undefined'){
+		console.log("Since no samplingRate was provided, we assume 44100 Hz");		
+	}
+	samplingRate = samplingRate || 44100.0;	
 	min_f0 = min_f0 || 100;
 	max_f0 = max_f0 || 450;
 	tolerance = tolerance || 0.15;
@@ -62,12 +64,12 @@ function computePitchYIN(buffer){
 	var pitch =-1;
 	var pitch_conf =0;
 
-	maxTau = Math.min(maxTau, parseInt(buffer.length/2.0);
+	maxTau = Math.min(maxTau, parseInt(buffer.length/2.0));
 	yin[0] = 1;
 	// Compute difference function
 	for (var tau = 1; tau <=yin.length; tau++) {
 			yin[tau] = 0;
-			for (var jj =0; jj <buffer.length-yin.length; jj++){
+			for (var jj =0; jj <buffer.length-tau; jj++){
 				yin[tau]+= Math.pow(buffer[jj]-buffer[jj+(tau)], 2);
 			}
 		}
@@ -80,15 +82,16 @@ function computePitchYIN(buffer){
 	}
 
 	minima = findLocalMinimas(yin);
-
+	//console.log(minima, samplingRate, samplingRate/minima.min_offset);
+	
 	if (minima.min_offset > 0)
 	{
 		if (minima.min_val<=tolerance){
-			pitch = samplingRate/min_offset;
+			pitch = samplingRate/minima.min_offset;
 			pitch_conf = 1 - minima.min_val;	
 		}
 		
 	}
 
-	return pitch;
+	return samplingRate/minima.min_offset;
 }
