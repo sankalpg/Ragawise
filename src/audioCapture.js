@@ -77,6 +77,10 @@ function init() {
     } catch (e) {
       alert('No web audio support in this browser!');
     }
+    //initializing pitch visualization
+    var xRange = {min:0, max:pitch_buffer_len};
+    var yRange = {min:0, max:1200};
+    initDraw(xRange, yRange);
 };
 
 // Function to read the samples and do some processing
@@ -86,8 +90,13 @@ function getSamples( time ) {
     analyser.getFloatTimeDomainData(myBuffer);
 
     // use the time domain data for pitch estimation
+    
     var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
-    transcribe_note(pitch);
+    pitch_buffer.push(pitch);
+    
+    //console.log(pitch_buffer.get_buff());
+    draw(pitch_buffer.get_buff());  //draw the buffer
+    //transcribe_note(pitch);
     //console.log(pitch)  //logging the pitch
 
     //This is the way we have made continuous callback to this function

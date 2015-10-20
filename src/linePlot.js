@@ -76,7 +76,7 @@ function draw(data) {
     }*/
     //testD.push(Math.random() * 150);
   //}
-  console.log(Array.max(data));
+  //console.log(Array.max(data));
  
   svg.select("path#graph").datum(data).attr("class", "line").attr("d", line);
 }
