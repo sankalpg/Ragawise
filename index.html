@@ -1,18 +1,51 @@
 <!doctype html>
 <html>
 <head>
-<link rel="stylesheet" type="text/css" href="d3_support.css">
+
+<link rel="stylesheet" type="text/css" href="style/d3style.css">
+
 <title>Ragawise</title>
 <link href='http://fonts.googleapis.com/css?family=Alike' rel='stylesheet' type='text/css'>
 </head>
+
 <body onload = "init()">
 
-<button onclick="startRecording()">Start recording</button>
-<button onclick="stopRecording()">Start recording</button>
+	<button onclick="startRecording()">Start recording</button>
+	<button onclick="stopRecording()">Stop recording</button>
 
-<script src = "audioCapture.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
-<script src = "simplePlot.js"></script>
+	<script src = "src/pitchdetection.js"></script>
+	<script src = "src/audioCapture.js"></script>
+  <script src = "src/transcription.js"></script>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.6/d3.min.js" charset="utf-8"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<!--<script src = "src/simplePlot.js"></script>-->
+
+
+<select id = "tonic" onchange = "tonic_change()">
+  <option value="110.0"		>A</option>
+  <option value="116.54"	>A#</option>
+  <option value="123.47"	>B</option>
+  <option value="130.8127"	>C</option>
+  <option value="138.591"	>C#</option>
+  <option value="146.832"	>D</option>
+  <option value="155.563"	>D#</option>
+  <option value="164.813"	>E</option>
+  <option value="174.614"	>F</option>
+  <option value="184.997"	>F#</option>
+  <option value="195.997"	>G</option>
+  <option value=" 207.652"	>G#</option>
+
+  
+</select>
+
+<script>
+function tonic_change(){
+	setTonic(parseFloat($("#tonic").val()));	
+}
+
+</script>
+
 
 </body>
 </html>
