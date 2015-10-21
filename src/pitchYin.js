@@ -39,12 +39,27 @@ function findGlobalMinima(buffer, minTau, maxTau){
 	minimas = []
 	min_val = 10000000000000;
 	min_offset = -1;
+	first_valley = false;
 
-	for (var ii =minTau ; ii < maxTau; ii++){
-		if (buffer[ii]<min_val){
-			min_val = buffer[ii];
-			min_offset = ii;
+	for (var ii =minTau+1 ; ii < maxTau; ii++){
+		if (buffer[ii] < tolerance && first_valley == false){
+			first_valley = true;
 		}
+		if (buffer[ii] >= tolerance && first_valley == true){
+			first_valley = false;
+			return {val: min_val, offset: min_offset};
+		}
+		if (first_valley){
+			if (buffer[ii]<min_val){
+				min_val = buffer[ii];
+				min_offset = ii;
+			}
+		}
+		// if (buffer[ii]<min_val){
+		// 		min_val = buffer[ii];
+		// 		min_offset = ii;
+		// 	}
+
 	}
 	return {val: min_val, offset: min_offset};
 }
@@ -57,9 +72,9 @@ function initPitchYIN(_samplingRate, _min_f0, _max_f0, _interpolate, _tolerance,
 		console.log("Since no samplingRate was provided, we assume 44100 Hz");		
 	}
 	samplingRate = _samplingRate || 44100.0;	
-	min_f0 = _min_f0 || 100;
+	min_f0 = _min_f0 || 85;
 	max_f0 = _max_f0 || 450;
-	tolerance = _tolerance || 0.15;
+	tolerance = _tolerance || 0.25;
 	interpolate = _interpolate || 1;
 	octFold = _octFold || false;
 
@@ -91,7 +106,7 @@ function computePitchYIN(buffer){
 	var sum = yin[0];
 	// Compute difference function
 	for (var tau = 1; tau <=SIZE_YIN; tau++) {
-			temp = 0;
+			temp = 0;	//writing temp instead of yin[tau] magically reduces the computatinal time by 4x
 			for (var jj =0; jj <SIZE_BUFF-tau; jj++){
 				temp+= Math.pow(buffer[jj]-buffer[jj+tau], 2);
 			}
@@ -110,5 +125,6 @@ function computePitchYIN(buffer){
 		}
 		
 	}
+	//console.log(minima, pitch);
 	return pitch;
 }

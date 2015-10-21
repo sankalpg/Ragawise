@@ -32,16 +32,21 @@ function transcribe_note(curr_pitch){
 		var note_num = Math.round(curr_pitch/100.0)%12;
 	}
 
-	//onset of a note
-	if (last_frame_pitch == note_num && note_start==0 && note_num != -1){
+	//NOTE ONSET
+	// if its not a unvoiced frame (note_num != -1)
+	// if last frame's pitch is equal to current frame's pitch (two frame with the same pitch)
+	// and if the note hasn't started
+	//Then go in
+	if (note_num != -1 && last_frame_pitch == note_num && note_start==0){
 		note_start=1;
 		var date = new Date();
 		time_start = date.getTime()/1000.0;
 		console.log("Onset", time_start);
 	}
-	//stable region of a note
-	if (last_frame_pitch == note_num && note_start == 1){
 
+	//stable region of a note
+	if (note_start == 1 && last_frame_pitch == note_num){
+		console.log("NOTE STABLE",note_num);
 	}
 
 	//offset of a note
@@ -55,9 +60,7 @@ function transcribe_note(curr_pitch){
 			note.duration = note.end-note.start;
 			note_buffer.push(note)
 			console.log(note_buffer.get(0));
-
 		}	
-		
 		note_start=0;
 	}
 	
