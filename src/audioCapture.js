@@ -110,9 +110,9 @@ function getSamples( time ) {
         pitch_C = -1;
     }
     pitch_buffer.push(pitch_C);    
-    //transcribe_note(pitch_C);
+    transcribe_note(pitch_C);
     var d = new Date();
-    console.log(pitch, pitch_C, d.getTime()-pasttime);
+    //console.log(pitch, pitch_C, d.getTime()-pasttime);
     pasttime = d.getTime();
     draw(pitch_buffer.get_buff());  //draw the buffer
     //console.log(pitch)  //logging the pitch

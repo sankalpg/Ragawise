@@ -3,7 +3,7 @@
 
 
 //Crucial parameters
-var min_note_dur = 0.3;
+var min_note_dur = 0.25;
 var max_gap_allwd = 0.1;
 var note_buff_len = 10; //number of past notes to store
 var last_frame_pitch = -1;
@@ -46,7 +46,7 @@ function transcribe_note(curr_pitch){
 
 	//stable region of a note
 	if (note_start == 1 && last_frame_pitch == note_num){
-		console.log("NOTE STABLE",note_num);
+		//console.log("NOTE STABLE",note_num);
 	}
 
 	//offset of a note
