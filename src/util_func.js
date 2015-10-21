@@ -23,7 +23,8 @@ var createRingBuffer_obj = function(length){
 		    push : function(item){
 		    buffer[pointer] = item;
 		    pointer = (length + pointer +1) % length;
-	    	}
+	    	},
+	    	get_length: function(){return buffer.length;}
   };
 };
 
