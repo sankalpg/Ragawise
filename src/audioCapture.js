@@ -10,6 +10,7 @@ var buflen = 2048;
 var myBuffer = new Float32Array( buflen );
 var pitch_buffer_len;
 var pitch_buffer;
+var pasttime =1;
 
 // Util functions 
     function __log(e, data) {
@@ -111,7 +112,8 @@ function getSamples( time ) {
     pitch_buffer.push(pitch_C);    
     //transcribe_note(pitch);
     var d = new Date();
-    console.log(pitch, pitch_C, d.getTime());
+    console.log(pitch, pitch_C, d.getTime()-pasttime);
+    pasttime = d.getTime();
     draw(pitch_buffer.get_buff());  //draw the buffer
     //console.log(pitch)  //logging the pitch
 

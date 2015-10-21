@@ -13,6 +13,7 @@ var octFold;
 var minTau = -1;
 var maxTau = -1;
 var nDelays = -1
+var Thsld_energy_per_frame = 0.01;
 
 
 function findLocalMinimas(buffer, minTau, maxTau){
@@ -28,6 +29,21 @@ function findLocalMinimas(buffer, minTau, maxTau){
 				min_val = buffer[ii];
 				min_offset = ii;
 			}
+		}
+	}
+	return {val: min_val, offset: min_offset};
+}
+
+function findGlobalMinima(buffer, minTau, maxTau){
+
+	minimas = []
+	min_val = 10000000000000;
+	min_offset = -1;
+
+	for (var ii =minTau ; ii < maxTau; ii++){
+		if (buffer[ii]<min_val){
+			min_val = buffer[ii];
+			min_offset = ii;
 		}
 	}
 	return {val: min_val, offset: min_offset};
@@ -57,32 +73,33 @@ function initPitchYIN(_samplingRate, _min_f0, _max_f0, _interpolate, _tolerance,
 
 	//assigning array to store AMDF vals
 	yin = new Float32Array(maxTau+1);
+	for (var ii =0; ii<yin.length; ii++){
+		yin[ii]=10000000000;
+	}
 }
 
 function computePitchYIN(buffer){
 
 	var pitch =-1;
 	var pitch_conf =0;
+	var temp;
+	var SIZE_YIN = yin.length;
+	var SIZE_BUFF = buffer.length;
 	
 	maxTau = Math.min(maxTau, parseInt(buffer.length/2.0));
 	yin[0] = 1;
+	var sum = yin[0];
 	// Compute difference function
-	for (var tau = 1; tau <=yin.length; tau++) {
-			yin[tau] = 0;
-			for (var jj =0; jj <buffer.length-tau; jj++){
-				yin[tau]+= Math.pow(buffer[jj]-buffer[jj+(tau)], 2);
+	for (var tau = 1; tau <=SIZE_YIN; tau++) {
+			temp = 0;
+			for (var jj =0; jj <SIZE_BUFF-tau; jj++){
+				temp+= Math.pow(buffer[jj]-buffer[jj+tau], 2);
 			}
+			sum+=temp;
+			yin[tau] = temp*tau/sum;	//scale factor proposed in yin
 		}
 
-	// Compute a cumulative mean normalized difference function
-	var sum = yin[0];
-	for (tau = 1; tau <= maxTau; tau++){
-		sum+=yin[tau];
-		yin[tau] = yin[tau] * tau/sum;
-	}
-
-	minima = findLocalMinimas(yin, minTau, maxTau);
-	//console.log(minima, samplingRate, samplingRate/minima.offset, minTau, maxTau);
+	minima = findGlobalMinima(yin, minTau, maxTau);
 	
 	if (minima.offset > 0)
 	{
