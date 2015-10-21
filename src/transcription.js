@@ -1,6 +1,6 @@
 
 //Circular buffer to store notes
-var createRingBuffer = function(length){
+var createRingBuffer_obj = function(length){
 	var pointer = 0, buffer = []; 
   	return {
 		    get  : function(key){return buffer[key];},
@@ -24,7 +24,7 @@ var note_start = 0;
 
 //initializations
 var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
-var note_buffer = createRingBuffer(note_buff_len);
+var note_buffer = createRingBuffer_obj(note_buff_len);
 
 
 	

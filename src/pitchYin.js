@@ -4,24 +4,24 @@ Ref + Lis -> coming soon...
 */
 
 //Crucial parameters
-var min_f0 = -1;
-var max_f0 = -1;
-var samplingRate = -1;
-var interpolate = -1;
-var tolerance = -1;
+var min_f0;
+var max_f0;
+var samplingRate;
+var interpolate;
+var tolerance;
+var octFold;
 var minTau = -1;
 var maxTau = -1;
-var octFold = -1;
 var nDelays = -1
 
 
-function findLocalMinimas(buffer){
+function findLocalMinimas(buffer, minTau, maxTau){
 
 	minimas = []
 	min_val = 10000000000000;
 	min_offset = -1;
 
-	for (var ii =1 ; ii < buffer.length-1; ii++){
+	for (var ii =minTau ; ii < maxTau; ii++){
 		if ((buffer[ii]-buffer[ii-1] < 0) && (buffer[ii+1]-buffer[ii]>0)) {
 			minimas.push({min_val:buffer[ii], offset:ii});
 			if (buffer[ii]<min_val){
@@ -30,22 +30,22 @@ function findLocalMinimas(buffer){
 			}
 		}
 	}
-	return {min_val: min_val, min_offset: min_offset};
+	return {val: min_val, offset: min_offset};
 }
 
 
-function initPitchYIN(samplingRate, min_f0, max_f0, interpolate, tolerance, octFold){
+function initPitchYIN(_samplingRate, _min_f0, _max_f0, _interpolate, _tolerance, _octFold){
 
 	//assigning the default values of the parameters
-	if (typeof samplingRate == 'undefined'){
+	if (typeof _samplingRate == 'undefined'){
 		console.log("Since no samplingRate was provided, we assume 44100 Hz");		
 	}
-	samplingRate = samplingRate || 44100.0;	
-	min_f0 = min_f0 || 100;
-	max_f0 = max_f0 || 450;
-	tolerance = tolerance || 0.15;
-	interpolate = interpolate || 1;
-	octFold = octFold || false;
+	samplingRate = _samplingRate || 44100.0;	
+	min_f0 = _min_f0 || 100;
+	max_f0 = _max_f0 || 450;
+	tolerance = _tolerance || 0.15;
+	interpolate = _interpolate || 1;
+	octFold = _octFold || false;
 
 	if (max_f0 <= min_f0){
 		console.log("Please provide a sensible min and max f0 value");
@@ -63,7 +63,7 @@ function computePitchYIN(buffer){
 
 	var pitch =-1;
 	var pitch_conf =0;
-
+	
 	maxTau = Math.min(maxTau, parseInt(buffer.length/2.0));
 	yin[0] = 1;
 	// Compute difference function
@@ -81,17 +81,17 @@ function computePitchYIN(buffer){
 		yin[tau] = yin[tau] * tau/sum;
 	}
 
-	minima = findLocalMinimas(yin);
-	//console.log(minima, samplingRate, samplingRate/minima.min_offset);
+	minima = findLocalMinimas(yin, minTau, maxTau);
+	//console.log(minima, samplingRate, samplingRate/minima.offset, minTau, maxTau);
 	
-	if (minima.min_offset > 0)
+	if (minima.offset > 0)
 	{
-		if (minima.min_val<=tolerance){
-			pitch = samplingRate/minima.min_offset;
-			pitch_conf = 1 - minima.min_val;	
+		if (minima.val < tolerance){
+			pitch = samplingRate/minima.offset;
+			pitch_conf = 1 - minima.val;	
 		}
 		
 	}
-
-	return samplingRate/minima.min_offset;
+	//console.log(minima, minTau, maxTau, pitch)
+	return pitch;
 }
