@@ -84,7 +84,7 @@ function init() {
     pitch_buffer  = createRingBuffer(pitch_buffer_len);
 
     var xRange = {min:0, max:pitch_buffer_len};
-    var yRange = {min:1000, max:2500};
+    var yRange = {min:500, max:2500};
     initDraw(xRange, yRange);
     initPitchYIN(samplingRate = audio_context.sampleRate);
     
@@ -101,16 +101,18 @@ function getSamples( time ) {
     
     //var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
     var pitch = computePitchYIN(myBuffer);
-    console.log(pitch);
-    if (pitch > 0){
-    pitch = 1200*Math.log2(pitch/tonic);    
+    
+    if (pitch > tonic){
+    pitch_C = 1200*Math.log2(pitch/tonic);    
     }
     else{
-        pitch = 1000;
+        pitch_C = 0;
     }
-    pitch_buffer.push(pitch);    
-    transcribe_note(pitch);
-    draw(pitch);  //draw the buffer
+    pitch_buffer.push(pitch_C);    
+    //transcribe_note(pitch);
+    var d = new Date();
+    console.log(pitch, pitch_C, d.getTime());
+    draw(pitch_buffer.get_buff());  //draw the buffer
     //console.log(pitch)  //logging the pitch
 
     //This is the way we have made continuous callback to this function

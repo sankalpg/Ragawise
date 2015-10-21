@@ -26,3 +26,9 @@ var createRingBuffer_obj = function(length){
 	    	}
   };
 };
+
+function interpolate_cubic(leftVal, middleVal, rightVal, currentBin){
+  var delta_x = 0.5*((leftVal - rightVal)/(leftVal - 2*middleVal + rightVal));
+  resultBin = currentBin + delta_x;
+  return resultBin
+}

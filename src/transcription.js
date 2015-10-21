@@ -1,15 +1,5 @@
 
-//Circular buffer to store notes
-var createRingBuffer_obj = function(length){
-	var pointer = 0, buffer = []; 
-  	return {
-		    get  : function(key){return buffer[key];},
-		    push : function(item){
-		    buffer[pointer] = item;
-		    pointer = (length + pointer +1) % length;
-	    	}
-  };
-};
+
 
 
 //Crucial parameters
@@ -20,13 +10,17 @@ var last_frame_pitch = -1;
 var time_start = -1;
 var time_end = -1;
 var note_start = 0;
+var tonic = 55.0
 
 
 //initializations
 var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
 var note_buffer = createRingBuffer_obj(note_buff_len);
 
-
+function setTonic(val){
+    tonic = val/2.0;
+    console.log(tonic);
+}
 	
 function transcribe_note(curr_pitch){
 	//This function performs the note transcription 

@@ -87,11 +87,11 @@ function computePitchYIN(buffer){
 	if (minima.offset > 0)
 	{
 		if (minima.val < tolerance){
-			pitch = samplingRate/minima.offset;
+			var off_fine = interpolate_cubic(yin[minima.offset-1], yin[minima.offset], yin[minima.offset+1], minima.offset);
+			pitch = samplingRate/off_fine;
 			pitch_conf = 1 - minima.val;	
 		}
 		
 	}
-	//console.log(minima, minTau, maxTau, pitch)
 	return pitch;
 }
