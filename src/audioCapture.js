@@ -8,6 +8,9 @@ var analyser = null;
 var mediaStreamSource = null;
 var buflen = 2048;
 var myBuffer = new Float32Array( buflen );
+var pitch_buffer_len;
+var pitch_buffer;
+var pasttime =1;
 
 // Util functions 
     function __log(e, data) {
@@ -78,10 +81,15 @@ function init() {
       alert('No web audio support in this browser!');
     }
     //initializing pitch visualization
+    pitch_buffer_len = 500;
+    pitch_buffer  = createRingBuffer(pitch_buffer_len);
+
     var xRange = {min:0, max:pitch_buffer_len};
-    var yRange = {min:1000, max:2400};
+    var yRange = {min:600, max:3600};
     initDraw(xRange, yRange);
     initPitchYIN(samplingRate = audio_context.sampleRate);
+    
+    
 };
 
 // Function to read the samples and do some processing
@@ -94,16 +102,18 @@ function getSamples( time ) {
     
     //var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
     var pitch = computePitchYIN(myBuffer);
-    
-    //console.log(pitch_buffer.get_buff());
-    if (pitch > 0){
-    pitch = 1200*Math.log2(pitch/tonic);    
+    //draw(pitch)
+    if (pitch > tonic){
+    pitch_C = 1200*Math.log2(pitch/tonic);    
     }
     else{
-        pitch = -1;
+        pitch_C = -1;
     }
-    pitch_buffer.push(pitch);    
-    transcribe_note(pitch);
+    pitch_buffer.push(pitch_C);    
+    transcribe_note(pitch_C);
+    var d = new Date();
+    //console.log(pitch, pitch_C, d.getTime()-pasttime);
+    pasttime = d.getTime();
     draw(pitch_buffer.get_buff());  //draw the buffer
     //console.log(pitch)  //logging the pitch
 

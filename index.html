@@ -18,13 +18,12 @@
 
   <script src = "src/linePlot.js"></script>
   <script src = "src/pitchYin.js"></script>
-  <script src = "src/pitchdetection.js"></script>
+  <!--<script src = "src/pitchdetection.js"></script>-->
 	<script src = "src/audioCapture.js"></script>
   <script src = "src/transcription.js"></script>
 
 	
 	<!--<script src = "src/simplePlot.js"></script>-->
-
 
 <select id = "tonic" onchange = "tonic_change()">
   <option value="110.0"		>A</option>
@@ -42,6 +41,8 @@
 
   
 </select>
+
+<strong><h1 id = "note_val_curr">'S'</h1></strong>
 
 <script>
 function tonic_change(){

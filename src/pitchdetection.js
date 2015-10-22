@@ -25,7 +25,7 @@ function setTonic(val){
     console.log(tonic);
 }
 
-function interpolate(leftVal, middleVal, rightVal, currentBin){
+function interpolate_cubic(leftVal, middleVal, rightVal, currentBin){
   var delta_x = 0.5*((leftVal - rightVal)/(leftVal - 2*middleVal + rightVal));
   resultBin = currentBin + delta_x;
   return resultBin
@@ -83,7 +83,7 @@ function autoCorrelate( buffer, sampleRate, oct_fold ) {
            
             //var shift = (correlations[best_offset+1] - correlations[best_offset-1])/correlations[best_offset];
             //return sampleRate/(best_offset+(8*shift));
-            var interp_offset = interpolate(correlations[best_offset-1], correlations[best_offset], correlations[best_offset+1], best_offset);
+            var interp_offset = interpolate_cubic(correlations[best_offset-1], correlations[best_offset], correlations[best_offset+1], best_offset);
             return sampleRate/(interp_offset);
         }
         lastCorrelation = correlation;
