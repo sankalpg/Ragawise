@@ -102,7 +102,8 @@ function getSamples( time ) {
     
     //var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
     var pitch = computePitchYIN(myBuffer);
-    //draw(pitch)
+    //
+    draw(pitch)
     if (pitch > tonic){
     pitch_C = 1200*Math.log2(pitch/tonic);    
     }
