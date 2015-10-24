@@ -1,41 +1,42 @@
 //d3.select("body").append("p").text("New paragraph!");
 
-var CANVAS_WIDTH = 960;
-var CANVAS_HEIGHT = 500;
+var CANVAS_WIDTH_LINEPLOT = 960;
+var CANVAS_HEIGHT_LINEPLOT = 500;
 
-var margin = {top: 20, right: 20, bottom: 30, left: 50},
-    width = CANVAS_WIDTH - margin.left - margin.right,
-    height = CANVAS_HEIGHT - margin.top - margin.bottom;
+var marginLinePlot = {top: 20, right: 20, bottom: 30, left: 50},
+    widthLinePlot = CANVAS_WIDTH_LINEPLOT - marginLinePlot.left - marginLinePlot.right,
+    heightLinePlot = CANVAS_HEIGHT_LINEPLOT - marginLinePlot.top - marginLinePlot.bottom;
 
-var svg;
-var x; // scale variable for x
-var y; // scale variable for y
+var xLinePlot; // scale variable for x
+var yLinePlot; // scale variable for y
 
-var xAxis;
+//var xAxis;
 
-var yAxis;
+//var yAxis;
 
 /**
 * Created to initialize the variables using the d3 library.
 */
 function initDraw(xRange, yRange) {
-  svg = d3.select("body").append("svg").attr("width", width + margin.left + margin.right).attr("height", height + margin.top + margin.bottom)
-  .append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  var svg = d3.select("body").append("svg")
+  .attr("id", "linePlot")
+  .attr("width", widthLinePlot + marginLinePlot.left + marginLinePlot.right).attr("height", heightLinePlot + marginLinePlot.top + marginLinePlot.bottom)
+  .append("g").attr("transform", "translate(" + marginLinePlot.left + "," + marginLinePlot.top + ")");
 
-  x = d3.scale.linear().range([0, width]).domain([xRange.min, xRange.max]);
-  y = d3.scale.linear().range([height, 0]).domain([yRange.min,yRange.max]);
+  xLinePlot = d3.scale.linear().range([0, widthLinePlot]).domain([xRange.min, xRange.max]);
+  yLinePlot = d3.scale.linear().range([heightLinePlot, 0]).domain([yRange.min,yRange.max]);
 
-  xAxis = d3.svg.axis()
-    .scale(x)
+  var xAxis = d3.svg.axis()
+    .scale(xLinePlot)
     .orient("bottom");
 
-  yAxis = d3.svg.axis()
-    .scale(y)
+  var yAxis = d3.svg.axis()
+    .scale(yLinePlot)
     .orient("left");
 
   svg.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + height + ")")
+      .attr("transform", "translate(0," + heightLinePlot + ")")
       .call(xAxis);
 
   svg.append("g")
@@ -54,16 +55,16 @@ function initDraw(xRange, yRange) {
 var line = d3.svg.line()
 .x(function(d,i) 
   {
-    return x(i);
+    return xLinePlot(i);
   })
 .y(function(d,i) 
   {
-    return y(d);
+    return yLinePlot(d);
   });
 
 function draw(data) {
 
-  var testD = [];
+  //var testD = [];
   //for (var i = 0; i <1200; i++) {
     /*if (i < 300) {
       testD.push(0);
@@ -77,6 +78,6 @@ function draw(data) {
     //testD.push(Math.random() * 150);
   //}
   //console.log(Array.max(data));
- 
+  var svg = d3.select("svg#linePlot");
   svg.select("path#graph").datum(data).attr("class", "line").attr("d", line);
 }
