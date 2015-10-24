@@ -13,7 +13,26 @@ dn.set_token("60312f59428916bb854adaa208f55eb35c3f2f07")
 svaras = ['S', 'r', 'R', 'g', 'G', 'm', 'M', 'P', 'd', 'D', 'n', 'N']
 svaras_np = np.array(svaras)
 thaats = {1: 'Bilawal', 2: 'Kalyan', 3:'Khamaj', 4: 'Bhairav', 5: 'Purvi', 6: 'Marwa', 7: 'Kafi', 8: 'Asawari', 9: 'Bhairavi', 10: 'Todi'}
-
+raga2color = {u'24a85738-02e8-4b0e-9098-926f57c19a50': '#CCFFCC',
+ u'2ed9379f-14c9-49af-8e4d-f9b63e96801f': '#FFA9E9',
+ u'2fe9f79c-7955-4dcd-939a-e0a73173c07f': '#91FF6C',
+ u'3eb7ba30-4b94-432e-9618-875ee57e01ab': '#9B9BAB',
+ u'46997b02-f09c-4969-8138-4e1861f61967': '#6699FF',
+ u'48b37bed-e847-4882-8a01-5c721e07f07d': '#999980',
+ u'64e5fb9e-5569-4e80-8e6c-f543af9469c7': '#9966FF',
+ u'6f13484e-6fdd-402d-baf3-3835835454d0': '#B8FFDB',
+ u'774ae631-eb8d-4b8e-9edd-5285e919821f': '#7C7C89',
+ u'78f439fa-88ba-480e-be87-4d65311df381': '#B29980',
+ u'80f3ec4b-d9db-4bc3-8186-9e6b0581f31a': '#70944D',
+ u'93c73081-bdf8-4eca-b325-d736b71e9b4b': '#669999',
+ u'9571385f-2743-41a1-9c6d-3db0545a6773': '#FFDB4D',
+ u'96ef352a-9baf-4ba9-a628-9cabb59b2175': '#99FFCC',
+ u'a7d98897-e2fe-4d75-b9dc-e5b4dc88e1c6': '#A34775',
+ u'd3be1a2a-ad82-495b-b738-b5e3dd664a0c': '#CCFFCC',
+ u'dd59147d-8775-44ff-a36b-0d9f15b31319': '#5C85FF',
+ u'f6432fec-e9c2-4b09-9e73-c46086cbd8ea': '#FFB547',
+ u'f7fddfc0-8c1d-4dd2-90d5-5d51a99d61f8': '#80CCCC',
+ u'fa28470c-d413-44c7-94da-181f530cbfdd': '#3399FF'}
 
 
 def generate_raga_list(output_file):
@@ -95,8 +114,8 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, tha
         raga_info['phrases'] = phrases
         raga_infos[sline[1]] = raga_info
         if not thaat_info.has_key(raga_info['thaat']):
-            thaat_info[raga_info['thaat']] = []
-        thaat_info[raga_info['thaat']].append({'uuid': raga_info['uuid'], 'common_name': raga_info['common_name'], 'likelihood':0})
+            thaat_info[raga_info['thaat']] = {}
+        thaat_info[raga_info['thaat']][raga_info['uuid']] = {'uuid': raga_info['uuid'], 'common_name': raga_info['common_name'], 'likelihood':0}
 
     print "Parsing of info done!, now starting to build indexes"
     #now build indexes for all the infos
