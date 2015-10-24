@@ -1,8 +1,8 @@
 //Crucial parameters
 var tonic = 55.0;
-var minNoteDur = 0.2;
+var minNoteDur = 0.25;
 var maxMergeDur = 1;	//for note merging
-var minSilDur = .5;
+var minSilDur = 1;
 var noteBufferLen = 200; //number of past notes to store
 var prevNoteNum = -1;
 var noteOnsetTime = -1;
@@ -25,6 +25,15 @@ var noteBuffer = createRingBuffer_obj(noteBufferLen);
 function setTonic(val){
     tonic = val/2.0;
     console.log(tonic);
+}
+
+function get_phrases(){
+	var len = symbolBuffer.length;
+	if (len > 4){
+	return {'status': true, '3len':symbolBuffer.slice(len-3,len).join("-"), '4len': symbolBuffer.slice(len-4,len).join("-")};	
+	}
+	return {'status': true, '3len':"", '4len': ""};
+	
 }
 
 
@@ -112,7 +121,7 @@ function transcribe_note(currPitch){
 	}
 
 	// ############################################################
-	// Breath pause is confirmed at this point (with this condition)
+	// Breath Offset
 	// ############################################################
 	if (currNoteNum != 12 && prevNoteNum == 12){
 		//console.log("Breath Offset");
@@ -153,6 +162,11 @@ function transcribe_note(currPitch){
 			noteBuffer.push(note);
 			symbolBuffer.push(svaras[note.num]);	
 			updateTranscriptionDisplay();
+			out = get_phrases();
+			if (out.status == true){
+				getRaga4Phrase(out['4len']);
+				getRaga4Phrase(out['3len']);
+			}
 		}
 		validNoteDurDetected = true;
 	}
@@ -177,6 +191,7 @@ function transcribe_note(currPitch){
 				noteBuffer.push(note);
 				symbolBuffer.push(svaras[note.num]);	
 				firstNoteDetected = true;
+				
 			}
 			else{
 				updatePrevNoteOffsetTime(currTime);
