@@ -47,6 +47,15 @@ def get_raga_indexes():
 	raga_indexes = json.load(codecs.open('../data/raga_indexes.json'))
 	return jsonify(**raga_indexes) 	
 
+@app.route('/get_thaat_info', methods=['GET', 'POST'])
+@support_jsonp
+def get_thaat_info():
+    """
+    """
+    #read a wav sound
+    thaat_info = json.load(codecs.open('../data/thaat_info.json'))
+    return jsonify(**thaat_info)      
+
 
 if __name__ == '__main__':
     app.config['DEBUG'] = True
