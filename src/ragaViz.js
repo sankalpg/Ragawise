@@ -55,26 +55,46 @@ var data = [
 //var y = d3.scale.ordinal().domain(d3.range(1)).rangePoints([0, height]);
 
 function initRagaViz() {
-	var height = 265;
-	var width = 265;
+	var height = "33%";
+	var width = "33%";
 
-	for (var i = 0 ; i < data.length; i++) {
-		var thaat = data[i].thaat;
+	var rows = data.length;
 
+	for (var i = 0 ; i < 3; i++) {
+		//var thaat = data[i].thaat;
 		var svg = d3.select("body")
 					.append("svg")
-					.attr("id",data[i].thaat)
 					.attr("width", width)
 					.attr("height", height)
 					.attr("viewBox", "0 0 100 100");
 
 		var group = svg.append("g")
-					.attr("id", data[i].thaat + "G")
+					//.attr("id", data[j].thaat + "G")
 					.attr("stroke", "green")
 					.attr("fill", "white")
-					.attr("stroke-width", 5);
+					.attr("stroke-width", 1);
+
+		var radius = 100 / (rows * 3 + 1);
+
+		for (var j = 0; j < rows; j++) {
+
+			var yPos = (j * 3  + 2) * radius;
+			
+			group.append("circle") // set the id here...
+				.attr("cx", 30)
+				.attr("cy", yPos)
+				.attr("r", radius / 2);
+
+			group.append("circle") // set the id here...
+				.attr("cx", 70)
+				.attr("cy", yPos)
+				.attr("r", radius / 2);
+		}
+		
+
+		
 					
-		var ragas = data[i].ragas;
+		/*var ragas = data[i].ragas;
 		var numRagas = ragas.length;
 		
 		var radius = 100 / (numRagas * 3 + 1);
@@ -86,20 +106,11 @@ function initRagaViz() {
 				.attr("id", function(d,idx) {return thaat + d})
 				.attr("cx", function(d,idx){ return (3 * idx + 2) * radius;})
 				.attr("cy", 50)
-				.attr("r", radius/2);
+				.attr("r", radius/2);*/
 				
-
-		/*group.selectAll("text")
-				.data(ragas)
-				.enter()
-				.append("text")
-				.attr("stroke", "red")
-				.attr("x", function(d,idx){ return (3 * idx + 2) * radius;})
-				.attr("y", 50)
-				.text("Test!");*/
 	}
 
-	updateRagaViz();
+	//updateRagaViz();
 }
 
 function updateRagaViz(newData) {
