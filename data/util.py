@@ -115,7 +115,7 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, tha
         raga_infos[sline[1]] = raga_info
         if not thaat_info.has_key(raga_info['thaat']):
             thaat_info[raga_info['thaat']] = {}
-        thaat_info[raga_info['thaat']][raga_info['uuid']] = {'uuid': raga_info['uuid'], 'common_name': raga_info['common_name'], 'likelihood':0}
+        thaat_info[raga_info['thaat']][raga_info['uuid']] = {'uuid': raga_info['uuid'], 'common_name': raga_info['common_name'], 'likelihood':0, 'color': raga2color[raga_info['uuid']]}
 
     print "Parsing of info done!, now starting to build indexes"
     #now build indexes for all the infos

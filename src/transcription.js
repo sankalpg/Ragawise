@@ -176,6 +176,7 @@ function transcribe_note(currPitch){
 				getRaga4Phrase(out['4len']);
 				getRaga4Phrase(out['3len']);
 			}
+			for (var pp in thaat_info)
 		}
 		validNoteDurDetected = true;
 	}

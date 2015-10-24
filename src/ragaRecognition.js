@@ -38,7 +38,7 @@ function getRaga4Svara(svara){
     for (var ii in raga_indexes['svars'][svara]){
         raga_uuid = raga_indexes['svars'][svara][ii]['uuid']
         thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=raga_indexes['svars'][svara][ii]['weight']
-        console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
+        //console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
     }
 }
 
@@ -46,14 +46,16 @@ function getRaga4Transition(svaraCurr, svaraPrev){
     for (var ii in raga_indexes['transitions'][svaraCurr][svaraPrev]){
         raga_uuid = raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['uuid']
         thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
-        console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
+        //console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
     }
 }
 
 function getRaga4Phrase(phrase){
     if (phrase in raga_indexes['phrases']){
         for (var kk in raga_indexes['phrases'][phrase]){
-            console.log("raga for phrase", phrase, raga_indexes['phrases'][phrase][kk]['common_name']);
+            raga_uuid = raga_indexes['phrases'][phrase][kk]['uuid']
+            thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['phrases'][phrase][kk]['weight']
+            //console.log("raga for phrase", phrase, raga_indexes['phrases'][phrase][kk]['common_name']);
         }
         
     }
