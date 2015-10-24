@@ -32,6 +32,7 @@ function setTonic(val){
 }
 function check_if_last_note_same(_note_buffer, current_val){
 	var pointer = _note_buffer.get_pointer();
+	console.log("checking prev stored note", pointer);
 	var last_note = _note_buffer.get(pointer-1);
 	if (last_note.num == current_val){
 		return true;
@@ -94,7 +95,6 @@ function transcribe_note(curr_pitch){
 		if (curr_time - time_start > min_note_dur){
 			var is_same = false
 			if (first_note_occured == true){
-				console.log("checking prev stored note", note_buffer.get_pointer());
 				is_same = check_if_last_note_same(note_buffer, last_frame_pitch);	
 			}
 			if (is_same == false){
