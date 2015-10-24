@@ -36,12 +36,16 @@ getRagaIndexes.onreadystatechange = function() {
 function getRaga4Svara(svara){
     console.log(raga_indexes['svars']);
     for (var ii in raga_indexes['svars'][svara]){
+        raga_uuid = raga_indexes['svars'][svara][ii]['uuid']
+        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=raga_indexes['svars'][svara][ii]['weight']
         console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
     }
 }
 
 function getRaga4Transition(svaraCurr, svaraPrev){
     for (var ii in raga_indexes['transitions'][svaraCurr][svaraPrev]){
+        raga_uuid = raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['uuid']
+        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
         console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
     }
 }
