@@ -99,9 +99,7 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, ind
     raga_index = {}
     raga_index['svars'] = {}
     raga_index['transitions'] = {}
-    raga_index['phrases_3n'] = {}
     raga_index['phrases'] = {}
-    raga_index['phrases_4n'] = {}
     for uuid, r_info in raga_infos.items():
         #svar indexing
         for si in r_info['svar_inds']:
@@ -122,29 +120,7 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, ind
             p = '-'.join([str(kk) for kk in phrase])
             if not raga_index['phrases'].has_key(p):
                 raga_index['phrases'][p] = []
-            raga_index['phrases'][p].append({'uuid': uuid, 'common_name': r_info['common_name']})
-            # if len(phrase)==3:
-            #     if not raga_index['phrases_3n'].has_key(phrase[0]):
-            #         raga_index['phrases_3n'][phrase[0]] = {}
-            #     if not raga_index['phrases_3n'][phrase[0]].has_key(phrase[1]):
-            #         raga_index['phrases_3n'][phrase[0]][phrase[1]] = {}
-            #     if not raga_index['phrases_3n'][phrase[0]][phrase[1]].has_key(phrase[2]):
-            #         raga_index['phrases_3n'][phrase[0]][phrase[1]][phrase[2]] = []
-
-            #     raga_index['phrases_3n'][phrase[0]][phrase[1]][phrase[2]].append({'uuid': uuid, 'common_name': r_info['common_name']})
-
-            # if len(phrase)==4:
-            #     if not raga_index['phrases_4n'].has_key(phrase[0]):
-            #         raga_index['phrases_4n'][phrase[0]] = {}
-            #     if not raga_index['phrases_4n'][phrase[0]].has_key(phrase[1]):
-            #         raga_index['phrases_4n'][phrase[0]][phrase[1]] = {}
-            #     if not raga_index['phrases_4n'][phrase[0]][phrase[1]].has_key(phrase[2]):
-            #         raga_index['phrases_4n'][phrase[0]][phrase[1]][phrase[2]] = {}
-            #     if not raga_index['phrases_4n'][phrase[0]][phrase[1]][phrase[2]].has_key(phrase[3]):
-            #         raga_index['phrases_4n'][phrase[0]][phrase[1]][phrase[2]][phrase[3]] = []
-
-            #     raga_index['phrases_4n'][phrase[0]][phrase[1]][phrase[2]][phrase[3]].append({'uuid': uuid, 'common_name': r_info['common_name']})
-
+            raga_index['phrases'][p].append({'uuid': uuid, 'common_name': r_info['common_name']})    
     json.dump(raga_infos, codecs.open(raga_info_file,'w', encoding = 'utf-8'))
     json.dump(raga_index, codecs.open(indexing_file,'w', encoding = 'utf-8'))
     return True
