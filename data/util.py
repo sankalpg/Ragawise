@@ -60,7 +60,7 @@ def parse_phrase_file(filename):
     return phrases
 
 
-def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, indexing_file):
+def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, thaat_info_file, indexing_file):
     """
     this function parses the annotations which kaustuv has done, it produces two files
     1) raga_info_file: contains swaras, swara transitions and phrases for a raga
@@ -69,6 +69,7 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, ind
 
     lines = codecs.open(raga_list_file, 'r', encoding = 'utf-8').readlines()
     raga_infos = {}
+    thaat_info = {}
     for ii, line in enumerate(lines[1:]):
         raga_info = {}
         sline = line.split(',')
@@ -93,6 +94,9 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, ind
         phrases = parse_phrase_file(phrase_file)
         raga_info['phrases'] = phrases
         raga_infos[sline[1]] = raga_info
+        if not thaat_info.has_key(raga_info['thaat']):
+            thaat_info[raga_info['thaat']] = []
+        thaat_info[raga_info['thaat']].append({'uuid': raga_info['uuid'], 'common_name': raga_info['common_name'], 'likelihood':0})
 
     print "Parsing of info done!, now starting to build indexes"
     #now build indexes for all the infos
@@ -123,6 +127,7 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, ind
             raga_index['phrases'][p].append({'uuid': uuid, 'common_name': r_info['common_name']})    
     json.dump(raga_infos, codecs.open(raga_info_file,'w', encoding = 'utf-8'))
     json.dump(raga_index, codecs.open(indexing_file,'w', encoding = 'utf-8'))
+    json.dump(thaat_info, codecs.open(thaat_info_file,'w', encoding = 'utf-8'))
     return True
 
 
