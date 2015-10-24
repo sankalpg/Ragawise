@@ -4,7 +4,7 @@
 
 //Crucial parameters
 var min_note_dur = 0.2;
-var max_gap_allwd = 0.1;
+var max_gap_allwd = 0.75;	//for note merging
 var note_buff_len = 10; //number of past notes to store
 var last_frame_pitch = -1;
 var time_start = -1;
@@ -30,11 +30,11 @@ function setTonic(val){
     tonic = val/2.0;
     console.log(tonic);
 }
-function check_if_last_note_same(_note_buffer, current_val){
+function check_if_last_note_same(_note_buffer, note){
 	var pointer = _note_buffer.get_pointer();
 	console.log("checking prev stored note", pointer);
 	var last_note = _note_buffer.get(pointer-1);
-	if (last_note.num == current_val){
+	if ((last_note.num == note.num) && ((note.start - last_note.end) < max_gap_allwd)){
 		return true;
 	}
 	else{
@@ -64,7 +64,7 @@ function transcribe_note(curr_pitch){
 	}
 	if (curr_time - breath_offset > long_pause_dur && breath_on){
 		phrase_bet_breath.push("---")
-		$('#note_val_curr').text(phrase_bet_breath.join(" "));
+		//$('#note_val_curr').text(phrase_bet_breath.join(" "));
 		breath_on = false;
 	}
 
@@ -94,20 +94,23 @@ function transcribe_note(curr_pitch){
 		
 		if (curr_time - time_start > min_note_dur){
 			var is_same = false
+			var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
+			note.num = last_frame_pitch;
+			note.start = time_start;
+			note.end = curr_time;
+			note.duration = note.end-note.start;
+			
 			if (first_note_occured == true){
-				is_same = check_if_last_note_same(note_buffer, last_frame_pitch);	
+				is_same = check_if_last_note_same(note_buffer, note);	
 			}
 			if (is_same == false){
-				var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
-				note.num = last_frame_pitch;
-				note.start = time_start;
-				note.end = curr_time;
-				note.duration = note.end-note.start;
 				note_buffer.push(note);
 				phrase_bet_breath.push(svaras[last_frame_pitch]);	
 				first_note_occured = true;
 				console.log("Valid note happenbed");
+				$('#note_val_curr').text(phrase_bet_breath.join(" "));
 			}
+
 		}
 		
 		breath_offset = curr_time;	
