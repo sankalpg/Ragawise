@@ -23,6 +23,10 @@ function initRagaViz() {
 		.append("g")
 	    .attr("transform", "translate(2,2)"); 
 
+	    ////////////////////////////////
+
+	    ///////////////////////////
+
 	//data = getData();
 
 	// getting data from JSON for testing.
@@ -37,6 +41,7 @@ function initRagaViz() {
 	    }
 	}*/
 
+	//refreshData();
 	refreshData();
 }
 
@@ -139,15 +144,26 @@ var refresh = function() {
 	node = svg.selectAll(".node")
                     .data(pack.nodes(currentJson));
 
-    node.enter().append("g")
+    var innerNodes = node.enter().append("g")
             .classed("node", true)
-            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; })
-        .append("circle")
+            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+       
+    innerNodes.append("circle")
             .attr("r", 0)
             .transition()
             .duration(2000)
             .attr("r", function(d) { return d.r; });
 
+    innerNodes.append("text")
+    		.attr("y", function(d) {return d.children ? 0 - d.r : 0;})
+      		.style("text-anchor", "middle")
+     		.text(function(d) { return d.name.substring(0, d.r / 3); });
+
+    innerNodes.select("text").filter(function(d) {return d.children;})
+    		.attr("font","15px sans-serif");
+
+
+    // updating ... transitions
     node.transition()
         .duration(2000)
         .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
@@ -157,5 +173,43 @@ var refresh = function() {
         .duration(2000)
         .attr("r", function(d) { return d.r; });
 
+    node.select("text")
+    	.attr("y", function(d) {return d.children ? 0 - d.r : 0;});
+
     setTimeout(refreshData, 3000);
 }
+
+/*
+function classes(root) {
+  var classes = [];
+  function recurse(name, node) {
+    if (node.children) {
+      node.children.forEach(function(child) { recurse(node.name, child); });
+    } else {
+      var newNode = {packageName: name, className: node.name, value: node.size};
+      for (var attr in node) { newNode[attr] = node[attr]; }
+      classes.push(newNode);
+    }
+  }
+  recurse(null, root);
+  return {children: classes};
+}
+
+function drawFlat(json) {
+  var pack = d3.select("body").append("svg")
+  	.attr("width", diameter)
+	.attr("height", diameter)
+    .chart("pack.flattened")
+      //.diameter(200)
+      .name("className")
+      .bubble({
+          flatten : classes,
+          title   : function(d) { return d.packageName + ": " + d3.format(",d")(d.value); },
+          pack    : function(d) { return d.packageName; }
+      })
+      .zoomable([0.1, 4])
+      //.colors(['#FF0000', '#00FF00', '#0000FF'])
+      ;
+  pack.draw(json);
+};
+*/
