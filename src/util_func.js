@@ -14,16 +14,19 @@ var createRingBuffer = function(length){
 		    get_buff: function(){return buffer;}
   };
 };
+function mod(i, i_max) {
+   return ((i % i_max) + i_max) % i_max;
+}
 
 //Circular buffer to store notes
 var createRingBuffer_obj = function(length){
 	var pointer = 0, buffer = []; 
   	return {
-		    get  : function(key){return buffer[key%length];},
-		    set  : function(key, val){return buffer[key%length]=val;},
+		    get  : function(key){return buffer[mod(key, length)];},
+		    set  : function(key, val){return buffer[mod(key, length)]=val;},
 		    push : function(item){
 		    buffer[pointer] = item;
-		    pointer = (length + pointer +1) % length;
+		    pointer = mod((length + pointer +1), length);
 	    	},
 	    	get_length: function(){return buffer.length;},
 	    	get_buff: function(){return buffer;},
