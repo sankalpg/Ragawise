@@ -27,6 +27,7 @@ function setTonic(val){
     console.log(tonic);
 }
 
+
 //this function checks if the last note stored is same as the current note
 function isLastNoteSame(_noteBuffer, current_note){
 	var pointer = _noteBuffer.get_pointer();
@@ -81,6 +82,7 @@ function transcribe_note(currPitch){
 	// Breath Onset
 	// ############################################################
 	if (currNoteNum == 12 && prevNoteNum != 12){
+		//console.log("Breath Onset");
 		isBreathOn = true;
 		breathOnsetTime = currTime;
 	}	
@@ -88,17 +90,24 @@ function transcribe_note(currPitch){
 	// ############################################################
 	// Breath pause is confirmed at this point (with this condition)
 	// ############################################################
-	if ( (currTime - breathOnsetTime >= minSilDur) && (isBreathOn == true) && (validNoteDurDetected = false)){
+	if ( ((currTime - breathOnsetTime) >= minSilDur) && (isBreathOn == true) && (validNoteDurDetected == false)){
 		// we treat silence as a musical symbol and push it
+		//console.log("Breath note validation");
 		var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
 		note.num = 12;
 		note.start = breathOnsetTime;
 		note.end = currTime;
 		note.duration = note.end-note.start;
+		var isPrevNoteSame = false;
 		// pushing silence symbol in noteBuffer and symbolBuffer
-		noteBuffer.push(note);
-		symbolBuffer.push(svaras[note.num]);
-		updateTranscriptionDisplay();
+		if (firstNoteDetected == true){
+				isPrevNoteSame = isLastNoteSame(noteBuffer, note);	
+			}
+		if (isPrevNoteSame == false){
+			noteBuffer.push(note);
+			symbolBuffer.push(svaras[note.num]);	
+			updateTranscriptionDisplay();
+		}
 		validNoteDurDetected = true;
 	}
 
@@ -106,6 +115,7 @@ function transcribe_note(currPitch){
 	// Breath pause is confirmed at this point (with this condition)
 	// ############################################################
 	if (currNoteNum != 12 && prevNoteNum == 12){
+		//console.log("Breath Offset");
 		isBreathOn = false;
 		if (validNoteDurDetected == true){
 			updatePrevNoteOffsetTime(currTime);
@@ -117,6 +127,7 @@ function transcribe_note(currPitch){
 	// Detecting note onset
 	// ############################################################
 	if (currNoteNum != 12 && prevNoteNum == currNoteNum && isNoteOn == false){
+		//console.log("Note Onset");
 		isNoteOn = true;
 		noteOnsetTime =currTime;
 		validNoteDurDetected = false;
@@ -126,15 +137,23 @@ function transcribe_note(currPitch){
 	// At this point a note qualifies a minimum note duration
 	// ############################################################
 	if (isNoteOn == 1 && ((currTime- noteOnsetTime) > minNoteDur) && validNoteDurDetected == false){
+		//console.log("Note duration verified");
 		var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
 		note.num = currNoteNum;
 		note.start = noteOnsetTime;
 		note.end = currTime;
 		note.duration = note.end-note.start;
 		// pushing silence symbol in noteBuffer and symbolBuffer
-		noteBuffer.push(note);
-		symbolBuffer.push(svaras[note.num]);
-		updateTranscriptionDisplay();
+		var isPrevNoteSame = false;
+		// pushing silence symbol in noteBuffer and symbolBuffer
+		if (firstNoteDetected == true){
+				isPrevNoteSame = isLastNoteSame(noteBuffer, note);	
+			}
+		if (isPrevNoteSame == false){
+			noteBuffer.push(note);
+			symbolBuffer.push(svaras[note.num]);	
+			updateTranscriptionDisplay();
+		}
 		validNoteDurDetected = true;
 	}
 
@@ -144,6 +163,7 @@ function transcribe_note(currPitch){
 	if (prevNoteNum != currNoteNum && isNoteOn ==1){
 		isNoteOn = false;
 		if (validNoteDurDetected == true){			
+			//console.log("Note Offset");
 			var isPrevNoteSame = false
 			var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
 			note.num = prevNoteNum;
