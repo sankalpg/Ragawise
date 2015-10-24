@@ -1,121 +1,206 @@
-
-
-
-
 //Crucial parameters
-var min_note_dur = 0.2;
-var max_gap_allwd = 0.1;
-var note_buff_len = 10; //number of past notes to store
-var last_frame_pitch = -1;
-var time_start = -1;
-var time_end = -1;
-var note_start = 0;
 var tonic = 55.0;
-var note_threshold_in = 30;	// in cents
-var note_threshold_out = 50;	// in cents
-var tshld;
-var long_pause_dur = .5;
+var minNoteDur = 0.25;
+var maxMergeDur = 1;	//for note merging
+var minSilDur = 1;
+var noteBufferLen = 200; //number of past notes to store
+var prevNoteNum = -1;
+var noteOnsetTime = -1;
+var breathOnsetTime =-1;
+var pitchAllowanceIn = 30;	// in cents
+var pitchAllowanceOut = 50;	// in cents
+var thsldTemp;
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
-var svaras = ['S', 'r', 'R', 'g', 'G', 'm', 'M', 'P', 'd', 'D', 'n', 'N']
-var phrase_bet_breath = [];
-var breath_offset;
-var breath_on = true;
-var first_note_occured = false;
-
+var svaras = ['S', 'r', 'R', 'g', 'G', 'm', 'M', 'P', 'd', 'D', 'n', 'N', '---']
+var symbolBuffer = [];
+var isNoteOn = false;
+var isBreathOn = true;
+var firstNoteDetected = false;
+var validNoteDurDetected = false;
 
 //initializations
-var note_buffer = createRingBuffer_obj(note_buff_len);
+var noteBuffer = createRingBuffer_obj(noteBufferLen);
 
+//setting tonic value for every singer (input from the web interface)
 function setTonic(val){
     tonic = val/2.0;
     console.log(tonic);
 }
-function check_if_last_note_same(_note_buffer, current_val){
-	var pointer = _note_buffer.get_pointer();
-	console.log("checking prev stored note", pointer);
-	var last_note = _note_buffer.get(pointer-1);
-	if (last_note.num == current_val){
+
+function get_phrases(){
+	var len = symbolBuffer.length;
+	if (len > 4){
+	return {'status': true, '3len':symbolBuffer.slice(len-3,len).join("-"), '4len': symbolBuffer.slice(len-4,len).join("-")};	
+	}
+	return {'status': true, '3len':"", '4len': ""};
+	
+}
+
+
+//this function checks if the last note stored is same as the current note
+function isLastNoteSame(_noteBuffer, current_note){
+	var pointer = _noteBuffer.get_pointer();
+	var last_note = _noteBuffer.get(pointer-1);
+	if ((last_note.num == current_note.num) && ((current_note.start - last_note.end) < maxMergeDur)){
 		return true;
 	}
 	else{
 		return false;
 	}
-}	
-function transcribe_note(curr_pitch){
-	//This function performs the note transcription 
-	//we expect the input curr_pitch in cents.
-	var closest_note;
+}
+
+function updateTranscriptionDisplay(){
+	$('#note_val_curr').text(symbolBuffer.join(" "));
+}
+
+function updatePrevNoteOffsetTime(currTime){
+	var pointer = noteBuffer.get_pointer();
+	var lastNote = noteBuffer.get(pointer-1);
+	lastNote.end = currTime;
+	noteBuffer.set(pointer-1, lastNote);
+}
+
+//this is the main function to transcribe melody	
+//NOTE: we expect the input currPitch in cents.
+function transcribe_note(currPitch){
+	
+	var nearestNote;
 	var date = new Date();
-	var curr_time = date.getTime()/1000.0;
-	// finding the note number corresponding to the input pitch
-	note_num = -1;
-	if (curr_pitch != -1){
-		closest_note = 100*(Math.round(curr_pitch/100.0));
-		diff = (curr_pitch - closest_note);
-		if (note_start ==0){
-			tshld = note_threshold_in;
+	var currTime = date.getTime()/1000.0;
+	var diff;
+
+	// ############################################################
+	// finding the note number corresponding to the input currPitch
+	// ############################################################
+	var currNoteNum = 12;
+	if (currPitch != -1){
+		nearestNote = 100*(Math.round(currPitch/100.0));
+		diff = Math.abs(currPitch - nearestNote);
+		if (isNoteOn == false){
+			thsldTemp = pitchAllowanceIn;
 		}
 		else{
-			tshld = note_threshold_out;
+			thsldTemp = pitchAllowanceOut;
 		}
-		if (diff <tshld ){
-			note_num = (closest_note/100.0)%12;
+		if (diff < thsldTemp ){
+			currNoteNum = (nearestNote/100.0)%12;
 		}
 	}
-	if (curr_time - breath_offset > long_pause_dur && breath_on){
-		phrase_bet_breath.push("---")
-		$('#note_val_curr').text(phrase_bet_breath.join(" "));
-		breath_on = false;
-	}
 
-	//NOTE ONSET
-	// if its not a unvoiced frame (note_num != -1)
-	// if last frame's pitch is equal to current frame's pitch (two frame with the same pitch)
-	// and if the note hasn't started
-	//Then go in
-	if (note_num != -1 && last_frame_pitch == note_num && note_start==0){
-		note_start=1;
-		var date = new Date();
-		time_start =curr_time;
-		console.log("Onset", time_start);
-		breath_on = false;
-		
-	}
+	// ############################################################
+	// Breath Onset
+	// ############################################################
+	if (currNoteNum == 12 && prevNoteNum != 12){
+		//console.log("Breath Onset");
+		isBreathOn = true;
+		breathOnsetTime = currTime;
+	}	
 
-	//stable region of a note
-	if (note_start == 1 && last_frame_pitch == note_num){
-		//console.log("NOTE STABLE",note_num);
-		//$('#note_val_curr').text(svaras[note_num]);
-	}
-
-	//offset of a note
-	if (last_frame_pitch != note_num && note_start ==1){
-		console.log("Offset", curr_time, last_frame_pitch);
-		
-		if (curr_time - time_start > min_note_dur){
-			var is_same = false
-			if (first_note_occured == true){
-				is_same = check_if_last_note_same(note_buffer, last_frame_pitch);	
+	// ############################################################
+	// Breath pause is confirmed at this point (with this condition)
+	// ############################################################
+	if ( ((currTime - breathOnsetTime) >= minSilDur) && (isBreathOn == true) && (validNoteDurDetected == false)){
+		// we treat silence as a musical symbol and push it
+		//console.log("Breath note validation");
+		var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
+		note.num = 12;
+		note.start = breathOnsetTime;
+		note.end = currTime;
+		note.duration = note.end-note.start;
+		var isPrevNoteSame = false;
+		// pushing silence symbol in noteBuffer and symbolBuffer
+		if (firstNoteDetected == true){
+				isPrevNoteSame = isLastNoteSame(noteBuffer, note);	
 			}
-			if (is_same == false){
-				var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
-				note.num = last_frame_pitch;
-				note.start = time_start;
-				note.end = curr_time;
-				note.duration = note.end-note.start;
-				note_buffer.push(note);
-				phrase_bet_breath.push(svaras[last_frame_pitch]);	
-				first_note_occured = true;
-				console.log("Valid note happenbed");
+		if (isPrevNoteSame == false){
+			noteBuffer.push(note);
+			symbolBuffer.push(svaras[note.num]);	
+			updateTranscriptionDisplay();
+		}
+		validNoteDurDetected = true;
+	}
+
+	// ############################################################
+	// Breath Offset
+	// ############################################################
+	if (currNoteNum != 12 && prevNoteNum == 12){
+		//console.log("Breath Offset");
+		isBreathOn = false;
+		if (validNoteDurDetected == true){
+			updatePrevNoteOffsetTime(currTime);
+		}
+		validNoteDurDetected = false;
+	}
+
+	// ############################################################
+	// Detecting note onset
+	// ############################################################
+	if (currNoteNum != 12 && prevNoteNum == currNoteNum && isNoteOn == false){
+		//console.log("Note Onset");
+		isNoteOn = true;
+		noteOnsetTime =currTime;
+		validNoteDurDetected = false;
+	}
+
+	// ############################################################
+	// At this point a note qualifies a minimum note duration
+	// ############################################################
+	if (isNoteOn == 1 && ((currTime- noteOnsetTime) > minNoteDur) && validNoteDurDetected == false){
+		//console.log("Note duration verified");
+		var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
+		note.num = currNoteNum;
+		note.start = noteOnsetTime;
+		note.end = currTime;
+		note.duration = note.end-note.start;
+		// pushing silence symbol in noteBuffer and symbolBuffer
+		var isPrevNoteSame = false;
+		// pushing silence symbol in noteBuffer and symbolBuffer
+		if (firstNoteDetected == true){
+				isPrevNoteSame = isLastNoteSame(noteBuffer, note);	
+			}
+		if (isPrevNoteSame == false){
+			noteBuffer.push(note);
+			symbolBuffer.push(svaras[note.num]);	
+			updateTranscriptionDisplay();
+			out = get_phrases();
+			if (out.status == true){
+				getRaga4Phrase(out['4len']);
+				getRaga4Phrase(out['3len']);
 			}
 		}
-		
-		breath_offset = curr_time;	
-		breath_on = true;
-		note_start=0;
+		validNoteDurDetected = true;
 	}
-	
-	//console.log(last_frame_pitch, note_num);
-	last_frame_pitch = note_num;
+
+	// ############################################################
+	// Detecting note offset
+	// ############################################################
+	if (prevNoteNum != currNoteNum && isNoteOn ==1){
+		isNoteOn = false;
+		if (validNoteDurDetected == true){			
+			//console.log("Note Offset");
+			var isPrevNoteSame = false
+			var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
+			note.num = prevNoteNum;
+			note.start = noteOnsetTime;
+			note.end = currTime;
+			note.duration = note.end-note.start;
+			if (firstNoteDetected == true){
+				isPrevNoteSame = isLastNoteSame(noteBuffer, note);	
+			}
+			if (isPrevNoteSame == false){
+				noteBuffer.push(note);
+				symbolBuffer.push(svaras[note.num]);	
+				firstNoteDetected = true;
+				
+			}
+			else{
+				updatePrevNoteOffsetTime(currTime);
+			}
+			validNoteDurDetected = false;
+
+		}		
+		
+	}
+	prevNoteNum = currNoteNum;
 
 }

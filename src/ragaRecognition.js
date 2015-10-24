@@ -33,3 +33,13 @@ getRagaIndexes.onreadystatechange = function() {
         raga_indexes = JSON.parse(getRagaIndexes.responseText);
     }
 }
+
+function getRaga4Phrase(phrase){
+    if (phrase in raga_indexes['phrases']){
+        for (var kk in raga_indexes['phrases'][phrase]){
+            console.log(raga_indexes['phrases'][phrase][kk]['common_name']);
+        }
+        
+    }
+    
+}

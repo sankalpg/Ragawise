@@ -121,7 +121,7 @@ def gen_indexing(raga_list_file, phrase_dir, transition_dir, raga_info_file, tha
             raga_index['transitions'][xy[0]][xy[1]].append({'uuid': uuid, 'common_name': r_info['common_name'], 'weight': r_info['tran_mtx'][xy[0]][xy[1]]})
         #phrase indexing
         for phrase in r_info['phrases']:
-            p = '-'.join([str(kk) for kk in phrase])
+            p = '-'.join([str(svaras[kk]) for kk in phrase])
             if not raga_index['phrases'].has_key(p):
                 raga_index['phrases'][p] = []
             raga_index['phrases'][p].append({'uuid': uuid, 'common_name': r_info['common_name']})    
