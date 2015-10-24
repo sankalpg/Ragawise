@@ -19,12 +19,15 @@ var createRingBuffer = function(length){
 var createRingBuffer_obj = function(length){
 	var pointer = 0, buffer = []; 
   	return {
-		    get  : function(key){return buffer[key];},
+		    get  : function(key){return buffer[key%length];},
+		    set  : function(key, val){return buffer[key%length]=val;},
 		    push : function(item){
 		    buffer[pointer] = item;
 		    pointer = (length + pointer +1) % length;
 	    	},
-	    	get_length: function(){return buffer.length;}
+	    	get_length: function(){return buffer.length;},
+	    	get_buff: function(){return buffer;},
+	    	get_pointer: function(){return pointer;}
   };
 };
 

@@ -20,17 +20,26 @@ var svaras = ['S', 'r', 'R', 'g', 'G', 'm', 'M', 'P', 'd', 'D', 'n', 'N']
 var phrase_bet_breath = [];
 var breath_offset;
 var breath_on = true;
+var first_note_occured = false;
 
 
 //initializations
-var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
 var note_buffer = createRingBuffer_obj(note_buff_len);
 
 function setTonic(val){
     tonic = val/2.0;
     console.log(tonic);
 }
-	
+function check_if_last_note_same(_note_buffer, current_val){
+	var pointer = _note_buffer.get_pointer();
+	var last_note = _note_buffer.get(pointer-1);
+	if (last_note.num == current_val){
+		return true;
+	}
+	else{
+		return false;
+	}
+}	
 function transcribe_note(curr_pitch){
 	//This function performs the note transcription 
 	//we expect the input curr_pitch in cents.
@@ -81,13 +90,24 @@ function transcribe_note(curr_pitch){
 	//offset of a note
 	if (last_frame_pitch != note_num && note_start ==1){
 		console.log("Offset", curr_time, last_frame_pitch);
+		
 		if (curr_time - time_start > min_note_dur){
-			note.num = last_frame_pitch;
-			note.start = time_start;
-			note.end = curr_time;
-			note.duration = note.end-note.start;
-			note_buffer.push(note);
-			phrase_bet_breath.push(svaras[last_frame_pitch]);
+			var is_same = false
+			if (first_note_occured == true){
+				console.log("checking prev stored note", note_buffer.get_pointer());
+				is_same = check_if_last_note_same(note_buffer, last_frame_pitch);	
+			}
+			if (is_same == false){
+				var note = {name:'', start: -1, end:-1 , duration:0, num:-1};
+				note.num = last_frame_pitch;
+				note.start = time_start;
+				note.end = curr_time;
+				note.duration = note.end-note.start;
+				note_buffer.push(note);
+				phrase_bet_breath.push(svaras[last_frame_pitch]);	
+				first_note_occured = true;
+				console.log("Valid note happenbed");
+			}
 		}
 		
 		breath_offset = curr_time;	
