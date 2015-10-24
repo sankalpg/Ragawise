@@ -33,11 +33,23 @@ getRagaIndexes.onreadystatechange = function() {
         raga_indexes = JSON.parse(getRagaIndexes.responseText);
     }
 }
+function getRaga4Svara(svara){
+    console.log(raga_indexes['svars']);
+    for (var ii in raga_indexes['svars'][svara]){
+        console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
+    }
+}
+
+function getRaga4Transition(svaraCurr, svaraPrev){
+    for (var ii in raga_indexes['transitions'][svaraCurr][svaraPrev]){
+        console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
+    }
+}
 
 function getRaga4Phrase(phrase){
     if (phrase in raga_indexes['phrases']){
         for (var kk in raga_indexes['phrases'][phrase]){
-            console.log(raga_indexes['phrases'][phrase][kk]['common_name']);
+            console.log("raga for phrase", phrase, raga_indexes['phrases'][phrase][kk]['common_name']);
         }
         
     }

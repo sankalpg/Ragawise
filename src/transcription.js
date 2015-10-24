@@ -12,6 +12,7 @@ var pitchAllowanceOut = 50;	// in cents
 var thsldTemp;
 var noteStrings = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
 var svaras = ['S', 'r', 'R', 'g', 'G', 'm', 'M', 'P', 'd', 'D', 'n', 'N', '---']
+var svaras2Num = {'S':0, 'r':1, 'R':2, 'g':3, 'G':4, 'm':5, 'M':6, 'P':7, 'd':8, 'D':9, 'n':10, 'N':11}
 var symbolBuffer = [];
 var isNoteOn = false;
 var isBreathOn = true;
@@ -163,6 +164,14 @@ function transcribe_note(currPitch){
 			symbolBuffer.push(svaras[note.num]);	
 			updateTranscriptionDisplay();
 			out = get_phrases();
+			symLen = symbolBuffer.length;
+			if (symLen >=2 ){
+				svarCurrent = svaras2Num[symbolBuffer[symLen-1]];
+				svarPrev = svaras2Num[symbolBuffer[symLen-2]];
+				getRaga4Svara(svarCurrent);
+				getRaga4Transition(svarCurrent, svarPrev);	
+			}
+			
 			if (out.status == true){
 				getRaga4Phrase(out['4len']);
 				getRaga4Phrase(out['3len']);
