@@ -56,8 +56,13 @@ var data = [
 
 function drawCircleCols(data) {
 
-	var height = "33%";
-	var width = "33%";
+	var xPostCircle = 10;
+	var xCircleGap = 50;
+	var width = Math.floor(screenWidth*0.32);
+	var height = Math.floor(screenHeight*0.60);
+	var topMargin = 10;
+	var headers = ['Svara', 'Svara Transition', 'Phrases']
+	offsetHeaders = [40, 25, 35]
 
 	var rows = 10;
 
@@ -75,26 +80,33 @@ function drawCircleCols(data) {
 					//.attr("stroke", "green")
 					//.attr("fill", "white")
 					.attr("stroke-width", 1);
+		group.append("text")
+				.attr("font-size", 5)
+				.attr("x", offsetHeaders[i])
+				.attr("y", topMargin/2)
+				.text(headers[i]);
 
-		var radius = 100 / (rows * 3 + 1);
+		var radius = (100 -topMargin)/ (rows * 2.5);
 
 		var j = 0;
 
 		for(var thaat in data) {
 			var count = 0;
-			var yPos = (j * 3  + 2) * radius;
+			var yPos =  topMargin +3+ (j * 2.6) * radius;
 			for (var uuid in data[thaat]) {
 
 				group.append("circle") // set the id here...
 				.attr("fill", data[thaat][uuid]["color"])
 				.attr("stroke-width", 0)
 				.attr("id", "id_" + uuid + "_" + i)
-				.attr("cx", 30 + 40 * count)
+				.attr("cx", xPostCircle + xCircleGap * count)
 				.attr("cy", yPos)
 				.attr("r", radius);
 
 				group.append("text")
-				.attr("x", 30 + 40 * count + radius )
+				.attr("id", "txt_" + uuid + "_" + i)
+				.attr("font-size", 2)
+				.attr("x", xPostCircle + xCircleGap * count + 2*radius )
 				.attr("y", yPos + radius/2)
 				.text(data[thaat][uuid]["common_name"]);
 
@@ -125,10 +137,11 @@ function drawCircleCols(data) {
 	//setTimeout(2000, animateRagas(["id_" + "dd59147d-8775-44ff-a36b-0d9f15b31319", "id_" + "48b37bed-e847-4882-8a01-5c721e07f07d"], 0));
 }
 
-function animateRagas(uuids, index, firstDur, secondDur) {
+function animateRagas(uuids, names, index, firstDur, secondDur) {
 	
 	for (ind in uuids) {
-		var thisCircle = d3.select("body").select("svg#" + "container_" + index).select("circle#" + uuids[ind] + "_" + index);
+		var thisCircle = d3.select("body").select("svg#" + "container_" + index).select("circle#id_" + uuids[ind] + "_" + index);
+		var thisText = d3.select("body").select("svg#" + "container_" + index).select("text#txt_" + names[ind] + "_" + index);
 		var oldRadius = thisCircle.attr("r");
 		var newRadius =  oldRadius * 1.5;
 

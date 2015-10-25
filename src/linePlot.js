@@ -1,10 +1,16 @@
 //d3.select("body").append("p").text("New paragraph!");
 
-var CANVAS_WIDTH_LINEPLOT = 960;
-var CANVAS_HEIGHT_LINEPLOT = 500;
+var screenWidth = window.innerWidth;
+var screenHeight = window.innerHeight;
 
-var marginLinePlot = {top: 20, right: 20, bottom: 30, left: 50},
-    widthLinePlot = CANVAS_WIDTH_LINEPLOT - marginLinePlot.left - marginLinePlot.right,
+console.log(screenWidth);
+console.log(screenHeight);
+
+var CANVAS_WIDTH_LINEPLOT = Math.floor(screenWidth*0.49);
+var CANVAS_HEIGHT_LINEPLOT = Math.floor(screenHeight*0.3);
+
+var marginLinePlot = {top: 0, right: 20, bottom: 30, left: 50},
+    widthLinePlot = CANVAS_WIDTH_LINEPLOT - marginLinePlot.left - marginLinePlot.right ;
     heightLinePlot = CANVAS_HEIGHT_LINEPLOT - marginLinePlot.top - marginLinePlot.bottom;
 
 var xLinePlot; // scale variable for x

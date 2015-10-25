@@ -1,9 +1,10 @@
 //d3.select("body").append("p").text("New paragraph!");
 
-var CANVAS_WIDTH_HIST = 1300;
-var CANVAS_HEIGHT_HIST = 500;
 
-var marginHist = {top: 20, right: 20, bottom: 30, left: 50},
+var CANVAS_WIDTH_HIST = Math.floor(screenWidth*0.49);
+var CANVAS_HEIGHT_HIST = Math.floor(screenHeight*0.3);
+
+var marginHist = {top: 0, right: 20, bottom: 30, left: 50},
     widthHist = CANVAS_WIDTH_HIST - marginHist.left - marginHist.right,
     heightHist = CANVAS_HEIGHT_HIST - marginHist.top - marginHist.bottom;
 
