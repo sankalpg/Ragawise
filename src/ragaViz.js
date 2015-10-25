@@ -54,33 +54,62 @@ var data = [
 
 //var y = d3.scale.ordinal().domain(d3.range(1)).rangePoints([0, height]);
 
-function initRagaViz() {
+function drawCircleCols(data) {
+
 	var height = "33%";
 	var width = "33%";
 
-	var rows = data.length;
+	var rows = 10;
 
 	for (var i = 0 ; i < 3; i++) {
 		//var thaat = data[i].thaat;
 		var svg = d3.select("body")
 					.append("svg")
+					.attr("id","container_" + i)
 					.attr("width", width)
 					.attr("height", height)
 					.attr("viewBox", "0 0 100 100");
 
 		var group = svg.append("g")
 					//.attr("id", data[j].thaat + "G")
-					.attr("stroke", "green")
-					.attr("fill", "white")
+					//.attr("stroke", "green")
+					//.attr("fill", "white")
 					.attr("stroke-width", 1);
 
 		var radius = 100 / (rows * 3 + 1);
 
-		for (var j = 0; j < rows; j++) {
+		var j = 0;
+
+		for(var thaat in data) {
+			var count = 0;
+			var yPos = (j * 3  + 2) * radius;
+			for (var uuid in data[thaat]) {
+
+				group.append("circle") // set the id here...
+				.attr("fill", data[thaat][uuid]["color"])
+				.attr("stroke-width", 0)
+				.attr("id", "id_" + uuid + "_" + i)
+				.attr("cx", 30 + 40 * count)
+				.attr("cy", yPos)
+				.attr("r", radius);
+
+				group.append("text")
+				.attr("x", 30 + 40 * count + radius )
+				.attr("y", yPos + radius/2)
+				.text(data[thaat][uuid]["common_name"]);
+
+				count++;
+			}
+
+			j++;
+		}
+
+		/*for (var j = 0; j < rows; j++) {
 
 			var yPos = (j * 3  + 2) * radius;
 			
 			group.append("circle") // set the id here...
+				.attr("fill", data[i][0])
 				.attr("cx", 30)
 				.attr("cy", yPos)
 				.attr("r", radius / 2);
@@ -89,11 +118,48 @@ function initRagaViz() {
 				.attr("cx", 70)
 				.attr("cy", yPos)
 				.attr("r", radius / 2);
-		}
-		
+		}*/
 
-		
-					
+		//setTimeout(2000, animateRagas(["96ef352a-9baf-4ba9-a628-9cabb59b2175"], 0));
+	}
+	setTimeout(2000, animateRagas(["id_" + "dd59147d-8775-44ff-a36b-0d9f15b31319", "id_" + "48b37bed-e847-4882-8a01-5c721e07f07d"], 0));
+}
+
+function animateRagas(uuids, index) {
+	
+	for (ind in uuids) {
+		var thisCircle = d3.select("body").select("svg#" + "container_" + index).select("circle#" + uuids[ind] + "_" + index);
+		var oldRadius = thisCircle.attr("r");
+		var newRadius =  oldRadius * 1.5;
+
+		thisCircle.transition()
+		.duration(100)
+        .attr("r", newRadius)
+        .attr("stroke-width",2)
+        .each("end", function(){
+        	d3.select(this).transition()
+			.duration(400)
+        	.attr("r", oldRadius)
+        	.attr("stroke-width", 0);
+        });
+	}
+} 
+
+function initRagaViz() {
+	
+
+	var getThaatInfo = new XMLHttpRequest();
+		getThaatInfo.open("GET", "http://127.0.0.1:5000/get_thaat_info", true);
+		getThaatInfo.send();
+		getThaatInfo.onreadystatechange = function() {
+		    if (getThaatInfo.readyState == 4 && getThaatInfo.status == 200) {
+		        baseData = JSON.parse(getThaatInfo.responseText);
+		        //currentJson = formatData(baseData);
+		        console.log(baseData);
+		        drawCircleCols(baseData);
+		    }
+		}
+						
 		/*var ragas = data[i].ragas;
 		var numRagas = ragas.length;
 		
@@ -108,7 +174,6 @@ function initRagaViz() {
 				.attr("cy", 50)
 				.attr("r", radius/2);*/
 				
-	}
 
 	//updateRagaViz();
 }
