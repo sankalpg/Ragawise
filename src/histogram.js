@@ -1,6 +1,3 @@
-//d3.select("body").append("p").text("New paragraph!");
-
-
 var CANVAS_WIDTH_HIST = Math.floor(screenWidth*0.48);
 var CANVAS_HEIGHT_HIST = Math.floor(screenHeight*0.3);
 
@@ -21,7 +18,12 @@ function initDraw_hist(xRange, yRange) {
   .attr("width", widthHist + marginHist.left + marginHist.right).attr("height", heightHist + marginHist.top + marginHist.bottom)
   .append("g").attr("transform", "translate(" + marginHist.left + "," + marginHist.top + ")");
 
-  //xHist = d3.scale.linear().range([0, widthHist]).domain([xRange.min, xRange.max]);
+  svg.append("text")
+    .attr("x", widthHist/2.2)
+    .attr("y", 10)
+    .attr("font-size", 12)
+    .attr("font-weight", 'bold')
+    .text("Raga Salience");
   var xDomain = [];
   for (var i = xRange.min; i <= xRange.max; i++) {
     xDomain.push(i);
@@ -29,7 +31,6 @@ function initDraw_hist(xRange, yRange) {
   xHist = d3.scale.ordinal().domain(xDomain).rangeBands([0, widthHist]);
 
   yHist = d3.scale.linear().range([heightHist, 0]).domain([yRange.min,yRange.max]);
-  //yHist = d3.scale.linear().range([heightHist, 0]);
 
   var xAxis = d3.svg.axis()
     .scale(xHist)
@@ -55,16 +56,7 @@ function initDraw_hist(xRange, yRange) {
       .text("Prominence");
 }
 
-/*var line = d3.svg.line()
-.x(function(d,i) 
-  {
-    return xHist(i);
-  })
-.y(function(d,i) 
-  {
-    return yHist(d);
-  });
-*/
+
 function drawHist(data, color) {
   
   var svg = d3.select("body").select("svg#hitogram").select("g");

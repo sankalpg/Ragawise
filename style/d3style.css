@@ -15,8 +15,8 @@ body {
 
 .line {
   fill: none;
-  stroke: steelblue;
-  stroke-width: 1.5px;
+  stroke: #DF5E5E;
+  stroke-width: 2px;
 }
 
 /* Styles for the histogram*/
