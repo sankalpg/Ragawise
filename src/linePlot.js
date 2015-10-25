@@ -6,7 +6,7 @@ var screenHeight = window.innerHeight;
 console.log(screenWidth);
 console.log(screenHeight);
 
-var CANVAS_WIDTH_LINEPLOT = Math.floor(screenWidth*0.49);
+var CANVAS_WIDTH_LINEPLOT = Math.floor(screenWidth*0.48);
 var CANVAS_HEIGHT_LINEPLOT = Math.floor(screenHeight*0.3);
 
 var marginLinePlot = {top: 0, right: 20, bottom: 30, left: 50},
