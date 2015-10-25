@@ -38,6 +38,8 @@ function drawCircleCols(data) {
 			var count = 0;
 			var yPos =  topMargin +3+ (j * 2.6) * radius;
 			for (var uuid in data[thaat]) {
+				
+				var _url = "http://dunya.compmusic.upf.edu/hindustani/raag/"+uuid;
 
 				group.append("circle") // set the id here...
 				.attr("fill", data[thaat][uuid]["color"])
@@ -52,6 +54,8 @@ function drawCircleCols(data) {
 				.attr("font-size", 2)
 				.attr("x", xPostCircle + xCircleGap * count + 2*radius )
 				.attr("y", yPos + radius/2)
+				//.attr("xlink:href", )
+				.on('click', function (event) {window.open("http://dunya.compmusic.upf.edu/hindustani/raag/"+d3.select(this).attr("id").split('_')[1], '_blank')})
 				.text(data[thaat][uuid]["common_name"]);
 
 				count++;

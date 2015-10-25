@@ -105,7 +105,7 @@ function getSamples( time ) {
     //var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
     var pitch = computePitchYIN(myBuffer);
     //
-    draw(pitch)
+    //draw(pitch)
     if (pitch > tonic){
     pitch_C = 1200*Math.log2(pitch/tonic);    
     }
@@ -114,10 +114,12 @@ function getSamples( time ) {
     }
     pitch_buffer.push(pitch_C);    
     transcribe_note(pitch_C);
-    var d = new Date();
-    //console.log(pitch, pitch_C, d.getTime()-pasttime);
-    pasttime = d.getTime();
-    draw(pitch_buffer.get_buff());  //draw the buffer
+    // var d = new Date();
+    // //console.log(pitch, pitch_C, d.getTime()-pasttime);
+    // pasttime = d.getTime();
+    pitch_buffer.copyLinBuff();
+    var linBuff = pitch_buffer.getLinBuff();
+    draw(linBuff);  //draw the buffer
     //console.log(pitch)  //logging the pitch
 
     //This is the way we have made continuous callback to this function

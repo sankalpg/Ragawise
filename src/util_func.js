@@ -4,14 +4,24 @@ Array.max = function( array ){
 
 //Circular buffer to store float32
 var createRingBuffer = function(length){
-	var pointer = 0, buffer = new Float32Array(length); 
+	var pointer = 0, buffer = new Float32Array(length), bufferLin = new Float32Array(length);
+	for (var ii =0; ii<length; ii++){
+		buffer[ii]=0;
+		buffer[ii]=0;
+	} 
   	return {
 		    get  : function(key){return buffer[key];},
 		    push : function(item){
 		    buffer[pointer] = item;
 		    pointer = (length + pointer +1) % length;
 		    },
-		    get_buff: function(){return buffer;}
+		    get_buff: function(){return buffer;},
+		    copyLinBuff: function(){
+		    	for (var ii=0; ii<length; ii++ ){
+		    		bufferLin[ii] = buffer[(ii+pointer)%length];
+		    	}
+		    },
+		    getLinBuff: function(key){return bufferLin;}
   };
 };
 function mod(i, i_max) {
