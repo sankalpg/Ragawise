@@ -52,10 +52,10 @@ function getRaga4Svara(svara){
         raga_uuid = raga_indexes['svars'][svara][ii]['uuid']
         thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=.5*raga_indexes['svars'][svara][ii]['weight']
         ragas.push(raga_uuid);
-        raga_names.push(raga_indexes['svars'][svara][ii]['common_name']);
+        //raga_names.push(raga_indexes['svars'][svara][ii]['common_name']);
         //console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
     }
-    animateRagas(ragas, raga_names, 0, 100, 300);
+    animateRagas(ragas, 0, 100, 500);
 }
 
 function getRaga4Transition(svaraCurr, svaraPrev){
@@ -67,12 +67,12 @@ function getRaga4Transition(svaraCurr, svaraPrev){
                 raga_uuid = raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['uuid']
                 thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
                 ragas.push(raga_uuid);
-                raga_names.push(raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name']);
+                //raga_names.push(raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name']);
                 //console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
             }
         }
     }
-    animateRagas(ragas,raga_names, 1, 100, 400);
+    animateRagas(ragas, 1, 100, 700);
 }
 
 function getRaga4Phrase(phrase){
@@ -83,11 +83,11 @@ function getRaga4Phrase(phrase){
             raga_uuid = raga_indexes['phrases'][phrase][kk]['uuid']
             thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= 8
             ragas.push(raga_uuid);
-            raga_names.push(raga_indexes['phrases'][phrase][kk]['common_name']);
+            //raga_names.push(raga_indexes['phrases'][phrase][kk]['common_name']);
             //console.log("raga for phrase", phrase, raga_indexes['phrases'][phrase][kk]['common_name']);
         }
         
     }
-    animateRagas(ragas, raga_names, 2, 100, 1000);
+    animateRagas(ragas, 2, 100, 1500);
     
 }

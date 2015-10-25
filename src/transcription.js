@@ -178,11 +178,11 @@ function transcribe_note(currPitch){
 				getRaga4Phrase(out['4len']);
 				getRaga4Phrase(out['3len']);
 			}
-			for (var pp in thaat_info){
-				for (var ll in thaat_info[pp]){
-					console.log(pp, thaat_info[pp][ll]['common_name'], thaat_info[pp][ll]['likelihood']);
-				}
-			}
+			// for (var pp in thaat_info){
+			// 	for (var ll in thaat_info[pp]){
+			// 		console.log(pp, thaat_info[pp][ll]['common_name'], thaat_info[pp][ll]['likelihood']);
+			// 	}
+			// }
 		}
 		validNoteDurDetected = true;
 	}

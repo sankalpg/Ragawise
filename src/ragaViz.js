@@ -137,11 +137,11 @@ function drawCircleCols(data) {
 	//setTimeout(2000, animateRagas(["id_" + "dd59147d-8775-44ff-a36b-0d9f15b31319", "id_" + "48b37bed-e847-4882-8a01-5c721e07f07d"], 0));
 }
 
-function animateRagas(uuids, names, index, firstDur, secondDur) {
+function animateRagas(uuids, index, firstDur, secondDur) {
 	
 	for (ind in uuids) {
 		var thisCircle = d3.select("body").select("svg#" + "container_" + index).select("circle#id_" + uuids[ind] + "_" + index);
-		var thisText = d3.select("body").select("svg#" + "container_" + index).select("text#txt_" + names[ind] + "_" + index);
+		var thisText = d3.select("body").select("svg#" + "container_" + index).select("text#txt_" + uuids[ind] + "_" + index);
 		var oldRadius = thisCircle.attr("r");
 		var newRadius =  oldRadius * 1.5;
 
@@ -154,6 +154,15 @@ function animateRagas(uuids, names, index, firstDur, secondDur) {
 			.duration(secondDur)
         	.attr("r", oldRadius)
         	.attr("stroke-width", 0);
+        });
+
+        thisText.transition()
+		.duration(firstDur)
+        .attr("font-size", 4)
+        .each("end", function(){
+        	d3.select(this).transition()
+			.duration(secondDur)
+        	.attr("font-size", 2);
         });
 	}
 } 
