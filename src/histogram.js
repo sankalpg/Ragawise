@@ -14,7 +14,7 @@ var yHist; // scale variable for yHist
 /**
 * Created to initialize the variables using the d3 library.
 */
-function initDraw(xRange, yRange) {
+function initDraw_hist(xRange, yRange) {
   var svg = d3.select("body").append("svg")
   .attr("id", "hitogram")
   .attr("width", widthHist + marginHist.left + marginHist.right).attr("height", heightHist + marginHist.top + marginHist.bottom)
@@ -64,7 +64,7 @@ function initDraw(xRange, yRange) {
     return yHist(d);
   });
 */
-function drawHist(data) {
+function drawHist(data, color) {
   
   var svg = d3.select("body").select("svg#hitogram").select("g");
 
@@ -73,8 +73,9 @@ function drawHist(data) {
       .data(data)
       .enter().append("rect")
       .attr("class", "bar")
+      .attr("fill", function(d, i) {return color[i];})
       .attr("x", function(d, i) {return xHist(i)})
       .attr("y", function(d, i) {return yHist(d)})
-      .attr("width", x.rangeBand())
+      .attr("width", xHist.rangeBand())
       .attr("height", function(d) {return heightHist - yHist(d)});
 }

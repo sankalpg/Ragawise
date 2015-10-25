@@ -88,6 +88,8 @@ function init() {
     var yRange = {min:600, max:3600};
     initDraw(xRange, yRange);
     initPitchYIN(samplingRate = audio_context.sampleRate);
+    initRagaViz();
+    initDraw_hist({'min': 1, 'max':20}, {'min':0, 'max':20} );
     
     
 };

@@ -171,12 +171,18 @@ function transcribe_note(currPitch){
 				getRaga4Svara(svarCurrent);
 				getRaga4Transition(svarCurrent, svarPrev);	
 			}
+			updateRagaConf();
+			drawHist(raga_conf, raga_color);
 			
 			if (out.status == true){
 				getRaga4Phrase(out['4len']);
 				getRaga4Phrase(out['3len']);
 			}
-			for (var pp in thaat_info)
+			for (var pp in thaat_info){
+				for (var ll in thaat_info[pp]){
+					console.log(pp, thaat_info[pp][ll]['common_name'], thaat_info[pp][ll]['likelihood']);
+				}
+			}
 		}
 		validNoteDurDetected = true;
 	}

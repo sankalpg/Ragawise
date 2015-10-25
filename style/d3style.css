@@ -20,20 +20,37 @@ body {
 }
 
 /* Styles for the histogram*/
-.bar {
+/*.bar {
   fill: steelblue;
 }
-
+*/
 .bar text {
   fill: #fff;
 }
 
-div.bar {
+/*div.bar {
 	display: inline-block;
     width: 20px;
-    height: 75px;   /* We'll override this later */
+    height: 75px;    We'll override this later 
     background-color: teal;
     margin-right: 5px;
 }
+*/
+svg {
+  background-color: white;
+  height: 300;
+  width: 300;
+  margin-right: 5;
+}
+circle {
+  stroke: #808080;
+}
+/*rect {
+  stroke: none;
+  fill: blue;
+}*/
+
+
 </style>
+
 

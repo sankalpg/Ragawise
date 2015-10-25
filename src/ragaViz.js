@@ -122,10 +122,10 @@ function drawCircleCols(data) {
 
 		//setTimeout(2000, animateRagas(["96ef352a-9baf-4ba9-a628-9cabb59b2175"], 0));
 	}
-	setTimeout(2000, animateRagas(["id_" + "dd59147d-8775-44ff-a36b-0d9f15b31319", "id_" + "48b37bed-e847-4882-8a01-5c721e07f07d"], 0));
+	//setTimeout(2000, animateRagas(["id_" + "dd59147d-8775-44ff-a36b-0d9f15b31319", "id_" + "48b37bed-e847-4882-8a01-5c721e07f07d"], 0));
 }
 
-function animateRagas(uuids, index) {
+function animateRagas(uuids, index, firstDur, secondDur) {
 	
 	for (ind in uuids) {
 		var thisCircle = d3.select("body").select("svg#" + "container_" + index).select("circle#" + uuids[ind] + "_" + index);
@@ -133,12 +133,12 @@ function animateRagas(uuids, index) {
 		var newRadius =  oldRadius * 1.5;
 
 		thisCircle.transition()
-		.duration(100)
+		.duration(firstDur)
         .attr("r", newRadius)
         .attr("stroke-width",2)
         .each("end", function(){
         	d3.select(this).transition()
-			.duration(400)
+			.duration(secondDur)
         	.attr("r", oldRadius)
         	.attr("stroke-width", 0);
         });

@@ -2,7 +2,8 @@
 var raga_info;
 var thaat_info
 var raga_indexes;
-
+var raga_conf;
+var raga_color;
 //Loading needed data for raga recognition
 // fetching dictionary of sounds
 var getRagaInfo = new XMLHttpRequest();
@@ -23,6 +24,16 @@ getThaatInfo.onreadystatechange = function() {
         thaat_info = JSON.parse(getThaatInfo.responseText);
     }
 }
+function updateRagaConf(){
+    raga_conf = []
+    raga_color = []
+    for (thaat in thaat_info){
+        for (uuid in thaat_info[thaat]){
+            raga_conf.push(thaat_info[thaat][uuid]['likelihood']);
+            raga_color.push(thaat_info[thaat][uuid]['color']);
+        }
+    }
+}
 	
 // fetching dictionary of sounds
 var getRagaIndexes = new XMLHttpRequest();
@@ -35,29 +46,42 @@ getRagaIndexes.onreadystatechange = function() {
 }
 function getRaga4Svara(svara){
     console.log(raga_indexes['svars']);
+    var ragas = []
     for (var ii in raga_indexes['svars'][svara]){
         raga_uuid = raga_indexes['svars'][svara][ii]['uuid']
-        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=raga_indexes['svars'][svara][ii]['weight']
+        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=.5*raga_indexes['svars'][svara][ii]['weight']
+        ragas.push("id_"+raga_uuid);
         //console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
     }
+    animateRagas(ragas,0, 100, 300);
 }
 
 function getRaga4Transition(svaraCurr, svaraPrev){
-    for (var ii in raga_indexes['transitions'][svaraCurr][svaraPrev]){
-        raga_uuid = raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['uuid']
-        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
-        //console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
+    var ragas = []
+    if (svaraCurr in raga_indexes['transitions']){ 
+        if (svaraPrev in raga_indexes['transitions'][svaraCurr]){ 
+            for (var ii in raga_indexes['transitions'][svaraCurr][svaraPrev]){
+                raga_uuid = raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['uuid']
+                thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
+                ragas.push("id_"+raga_uuid);
+                //console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
+            }
+        }
     }
+    animateRagas(ragas,1, 100, 400);
 }
 
 function getRaga4Phrase(phrase){
+    var ragas = []
     if (phrase in raga_indexes['phrases']){
         for (var kk in raga_indexes['phrases'][phrase]){
             raga_uuid = raga_indexes['phrases'][phrase][kk]['uuid']
-            thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['phrases'][phrase][kk]['weight']
+            thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= 8
+            ragas.push("id_"+raga_uuid);
             //console.log("raga for phrase", phrase, raga_indexes['phrases'][phrase][kk]['common_name']);
         }
         
     }
+    animateRagas(ragas,2, 100, 1000);
     
 }
