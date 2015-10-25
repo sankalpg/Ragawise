@@ -27,12 +27,25 @@ getThaatInfo.onreadystatechange = function() {
 function updateRagaConf(){
     raga_conf = []
     raga_color = []
+    var max_conf = -1
     for (thaat in thaat_info){
         for (uuid in thaat_info[thaat]){
             raga_conf.push(thaat_info[thaat][uuid]['likelihood']);
+            if (max_conf < thaat_info[thaat][uuid]['likelihood']){
+                max_conf = thaat_info[thaat][uuid]['likelihood'];
+            }
             raga_color.push(thaat_info[thaat][uuid]['color']);
         }
     }
+    if (max_conf > 75){
+        for (thaat in thaat_info){
+            for (uuid in thaat_info[thaat]){
+                thaat_info[thaat][uuid]['likelihood']= thaat_info[thaat][uuid]['likelihood']*50/max_conf;
+            }
+        }
+    }
+
+
 }
 	
 // fetching dictionary of sounds
@@ -50,7 +63,7 @@ function getRaga4Svara(svara){
     var raga_names = []
     for (var ii in raga_indexes['svars'][svara]){
         raga_uuid = raga_indexes['svars'][svara][ii]['uuid']
-        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=.5*raga_indexes['svars'][svara][ii]['weight']
+        thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+=0.5*raga_indexes['svars'][svara][ii]['weight']
         ragas.push(raga_uuid);
         //raga_names.push(raga_indexes['svars'][svara][ii]['common_name']);
         //console.log("raga for svara", svara, raga_indexes['svars'][svara][ii]['common_name'], raga_indexes['svars'][svara][ii]['weight']);    
@@ -65,7 +78,7 @@ function getRaga4Transition(svaraCurr, svaraPrev){
         if (svaraPrev in raga_indexes['transitions'][svaraCurr]){ 
             for (var ii in raga_indexes['transitions'][svaraCurr][svaraPrev]){
                 raga_uuid = raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['uuid']
-                thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
+                thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= 1.0*raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']
                 ragas.push(raga_uuid);
                 //raga_names.push(raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name']);
                 //console.log("raga for svara", svaraCurr, svaraPrev, raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['common_name'], raga_indexes['transitions'][svaraCurr][svaraPrev][ii]['weight']);    
@@ -81,7 +94,7 @@ function getRaga4Phrase(phrase){
     if (phrase in raga_indexes['phrases']){
         for (var kk in raga_indexes['phrases'][phrase]){
             raga_uuid = raga_indexes['phrases'][phrase][kk]['uuid']
-            thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= 8
+            thaat_info[raga_info[raga_uuid]['thaat']][raga_uuid]['likelihood']+= 15.0
             ragas.push(raga_uuid);
             //raga_names.push(raga_indexes['phrases'][phrase][kk]['common_name']);
             //console.log("raga for phrase", phrase, raga_indexes['phrases'][phrase][kk]['common_name']);

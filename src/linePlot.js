@@ -38,10 +38,10 @@ function initDraw(xRange, yRange) {
     .scale(yLinePlot)
     .orient("left");
 
-  svg.append("g")
-      .attr("class", "x axis")
-      .attr("transform", "translate(0," + heightLinePlot + ")")
-      .call(xAxis);
+  // svg.append("g")
+  //     .attr("class", "x axis")
+  //     .attr("transform", "translate(0," + heightLinePlot + ")")
+  //     .call(xAxis);
 
   svg.append("g")
       .attr("class", "y axis")
