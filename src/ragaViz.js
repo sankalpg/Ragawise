@@ -1,4 +1,4 @@
-
+var radius;
 function drawCircleCols(data) {
 
 	var xPostCircle = 10;
@@ -10,6 +10,7 @@ function drawCircleCols(data) {
 	var offsetHeaders = [40, 25, 35]
 	var rows = 10;
 
+	radius = (100 -topMargin)/ (rows * 2.5);
 	for (var i = 0 ; i < 3; i++) {
 		//var thaat = data[i].thaat;
 		var svg = d3.select("body")
@@ -30,7 +31,6 @@ function drawCircleCols(data) {
 				.attr("y", topMargin/2)
 				.text(headers[i]);
 
-		var radius = (100 -topMargin)/ (rows * 2.5);
 
 		var j = 0;
 
@@ -71,13 +71,13 @@ function animateRagas(uuids, index, firstDur, secondDur) {
 	for (ind in uuids) {
 		var thisCircle = d3.select("body").select("svg#" + "container_" + index).select("circle#id_" + uuids[ind] + "_" + index);
 		var thisText = d3.select("body").select("svg#" + "container_" + index).select("text#txt_" + uuids[ind] + "_" + index);
-		var oldRadius = thisCircle.attr("r");
-		var newRadius =  oldRadius * 1.5;
+		var oldRadius = radius;
+		var newRadius =  oldRadius * 1.25;
 
 		thisCircle.transition()
 		.duration(firstDur)
         .attr("r", newRadius)
-        .attr("stroke-width",2)
+        .attr("stroke-width",1.25)
         .each("end", function(){
         	d3.select(this).transition()
 			.duration(secondDur)
@@ -87,7 +87,7 @@ function animateRagas(uuids, index, firstDur, secondDur) {
 
         thisText.transition()
 		.duration(firstDur)
-        .attr("font-size", 4)
+        .attr("font-size", 3)
         .each("end", function(){
         	d3.select(this).transition()
 			.duration(secondDur)
