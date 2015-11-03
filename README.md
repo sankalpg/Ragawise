@@ -17,3 +17,6 @@ For best results use Chrome-stable or Firefox (latest version).
 # Description of the system
 * [CompMusic website](http://compmusic.upf.edu/node/281)
 * [HAMR proceedings](http://labrosa.ee.columbia.edu/hamr_ismir2015/proceedings/doku.php?id=ragawise)
+
+![](http://compmusic.upf.edu/system/files/static_files/compmusic_logo.png)
+![](http://compmusic.upf.edu/system/files/static_files/hamr-ismir-logo.png)
