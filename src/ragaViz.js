@@ -100,7 +100,7 @@ function initRagaViz() {
 	
 
 	var getThaatInfo = new XMLHttpRequest();
-		getThaatInfo.open("GET", "http://127.0.0.1:5000/get_thaat_info", true);
+		getThaatInfo.open("GET", "/ragawise/api/get_thaat_info", true);
 		getThaatInfo.send();
 		getThaatInfo.onreadystatechange = function() {
 		    if (getThaatInfo.readyState == 4 && getThaatInfo.status == 200) {

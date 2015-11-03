@@ -7,7 +7,7 @@ var raga_color;
 //Loading needed data for raga recognition
 // fetching dictionary of sounds
 var getRagaInfo = new XMLHttpRequest();
-getRagaInfo.open("GET", "http://127.0.0.1:5000/get_raga_info", true);
+getRagaInfo.open("GET", "/ragawise/api/get_raga_info", true);
 getRagaInfo.send();
 getRagaInfo.onreadystatechange = function() {
     if (getRagaInfo.readyState == 4 && getRagaInfo.status == 200) {
@@ -17,7 +17,7 @@ getRagaInfo.onreadystatechange = function() {
 
 // fetching dictionary of sounds
 var getThaatInfo = new XMLHttpRequest();
-getThaatInfo.open("GET", "http://127.0.0.1:5000/get_thaat_info", true);
+getThaatInfo.open("GET", "/ragawise/api/get_thaat_info", true);
 getThaatInfo.send();
 getThaatInfo.onreadystatechange = function() {
     if (getThaatInfo.readyState == 4 && getThaatInfo.status == 200) {
@@ -50,7 +50,7 @@ function updateRagaConf(){
 	
 // fetching dictionary of sounds
 var getRagaIndexes = new XMLHttpRequest();
-getRagaIndexes.open("GET", "http://127.0.0.1:5000/get_raga_indexes", true);
+getRagaIndexes.open("GET", "/ragawise/api/get_raga_indexes", true);
 getRagaIndexes.send();
 getRagaIndexes.onreadystatechange = function() {
     if (getRagaIndexes.readyState == 4 && getRagaIndexes.status == 200) {
