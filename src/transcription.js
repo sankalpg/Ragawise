@@ -1,5 +1,5 @@
 //Crucial parameters
-var tonic = 55.0;
+var tonic = 110.0/2.0;
 var minNoteDur = 0.25;
 var maxMergeDur = 1;	//for note merging
 var minSilDur = 1;

@@ -85,7 +85,7 @@ function init() {
     pitch_buffer  = createRingBuffer(pitch_buffer_len);
 
     var xRange = {min:0, max:pitch_buffer_len};
-    var yRange = {min:600, max:3600};
+    var yRange = {min:-600, max:1800};
     initDraw(xRange, yRange);
     initPitchYIN(samplingRate = audio_context.sampleRate);
     initRagaViz();
@@ -104,16 +104,18 @@ function getSamples( time ) {
     
     //var pitch = pitchDetect(myBuffer, audio_context.sampleRate);
     var pitch = computePitchYIN(myBuffer);
+    //console.log("Pitch is", pitch_C)
     //
     //draw(pitch)
-    if (pitch > tonic){
+    if (pitch > 0.0000000001){
     pitch_C = 1200*Math.log2(pitch/tonic);    
     }
     else{
         pitch_C = -1;
     }
-    pitch_buffer.push(pitch_C);    
     transcribe_note(pitch_C);
+    pitch_C = pitch_C -1200
+    pitch_buffer.push(pitch_C);    
     // var d = new Date();
     // //console.log(pitch, pitch_C, d.getTime()-pasttime);
     // pasttime = d.getTime();

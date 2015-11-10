@@ -13,7 +13,7 @@ var octFold;
 var minTau = -1;
 var maxTau = -1;
 var nDelays = -1
-var Thsld_energy_per_frame = 0.01;
+var Thsld_energy_per_frame = 0.0005;
 
 
 function findLocalMinimas(buffer, minTau, maxTau){
@@ -104,6 +104,17 @@ function computePitchYIN(buffer){
 	maxTau = Math.min(maxTau, parseInt(buffer.length/2.0));
 	yin[0] = 1;
 	var sum = yin[0];
+
+	//energy computation
+	var energy=0;
+	for (var ii = 0; ii < buffer.length; ii++){
+		energy+= Math.pow(buffer[ii],2)
+        }
+	energy = energy/buffer.length;
+	if (energy <= Thsld_energy_per_frame){
+		return pitch
+	}
+	
 	// Compute difference function
 	for (var tau = 1; tau <=SIZE_YIN; tau++) {
 			temp = 0;	//writing temp instead of yin[tau] magically reduces the computatinal time by 4x
