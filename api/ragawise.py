@@ -1,14 +1,15 @@
-from __future__ import unicode_literals
-
 import codecs
 import json
+import os
 from functools import wraps
 
 from flask import Flask, request, jsonify, current_app
 from flask_cors import CORS
 
 app = Flask(__name__)
+app.config.update(DATA_DIR='/data')
 CORS(app)
+
 
 def support_jsonp(f):
     """Wraps JSONified output for JSONP"""
@@ -27,21 +28,21 @@ def support_jsonp(f):
 @app.route('/get_raga_info', methods=['GET', 'POST'])
 @support_jsonp
 def get_raga_info():
-    raga_info = json.load(codecs.open('../data/raga_infos.json'))
+    raga_info = json.load(codecs.open(os.path.join(app.config['DATA_DIR'], 'raga_infos.json')))
     return jsonify(**raga_info)
 
 
 @app.route('/get_raga_indexes', methods=['GET', 'POST'])
 @support_jsonp
 def get_raga_indexes():
-    raga_indexes = json.load(codecs.open('../data/raga_indexes.json'))
+    raga_indexes = json.load(codecs.open(os.path.join(app.config['DATA_DIR'], 'raga_indexes.json')))
     return jsonify(**raga_indexes)
 
 
 @app.route('/get_thaat_info', methods=['GET', 'POST'])
 @support_jsonp
 def get_thaat_info():
-    thaat_info = json.load(codecs.open('../data/thaat_info.json'))
+    thaat_info = json.load(codecs.open(os.path.join(app.config['DATA_DIR'], 'thaat_info.json')))
     return jsonify(**thaat_info)      
 
 
